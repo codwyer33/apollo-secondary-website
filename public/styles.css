@@ -1,0 +1,117 @@
+#main{
+  background-color: white;
+  width:100%;
+  min-height:650px;
+  margin:0;
+  padding:90px;
+  padding-top:60px;
+/* background-image: url("https://www.transparenttextures.com/patterns/brushed-alum.png"); */
+}
+@media only screen and (max-width:700px){
+  #main{
+    padding:10px;
+    padding-top:40px;
+  }
+}
+
+.btn{
+  background-color: lightgray;
+  margin-right:10px;
+}
+.btn:hover{
+  background-color:gray;
+}
+
+.col{
+  margin-top:30px;
+}
+body{
+  background-color: #bfc1c9;
+}
+
+/*  Header */
+#header-logo {
+  max-width: 100px;
+}
+#header{
+  background-color:#bfc1c9;
+  padding-left: 50px;
+}
+#header h1, #header img {
+  display: inline;
+  margin-right:30px;
+  margin-top:6px;
+  margin-bottom:6px;
+
+}
+#header h1{
+  position:relative;
+  top:10px;
+  color:black;
+  text-decoration: none;
+}
+#header a{
+  text-decoration: none;
+}
+
+/* Landing */
+#landing-page i{
+  font-size:1.3em;
+}
+
+/* Login */
+#login-page input{
+  margin-bottom:-1px;
+  padding:7px 4px;
+  width:100%;
+  border:1px #9e9e9e solid;
+}
+#login-page .login-card{
+  background-color: #ccdaf0;
+  padding:40px;
+  margin:20px;
+  border-radius:5px;
+  min-height:390px;
+  /* text-align: center; */
+}
+#login-page button{
+  border:2px solid black;
+  background-color:#ccdaf0;
+  margin-top:15px;
+  width:100%;
+  font-size:1em;
+}
+#login-page button:hover{
+  border:2px solid black;
+  background-color:black;
+  color:white;
+}
+/* #login-container{
+  padding-left:50px;
+  padding-right:50px;
+} */
+#login-page h3{
+  font-size:1.1em;
+  padding-bottom:5px;
+}
+#login-page h2{
+  padding-bottom:5px;
+}
+#login-page h1{
+  padding-left:25px;
+}
+.top-input{
+  border-radius:4px 4px 0 0;
+}
+.btm-input{
+  border-radius:0 0 4px 4px;
+}
+/* Home */
+#home-page .home-card{
+  background-color: #ccdaf0;
+  padding:40px;
+  margin:20px;
+  border-radius:5px;
+  min-height:390px;
+  /* text-align: center; */
+}

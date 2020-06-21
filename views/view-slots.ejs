@@ -1,0 +1,66 @@
+<%- include("./partials/header"); -%>
+
+<h1>View Shadow Slots</h1>
+<div class="container">
+  <div class="row">
+    <div class="col col-12 col-lg-2">
+      Physician Name
+    </div>
+    <div class="col col-12 col-lg-1">
+      Date
+    </div>
+    <div class="col col-12 col-lg-2">
+      Time
+    </div>
+    <div class="col col-12 col-lg-2">
+      Location
+    </div>
+    <div class="col col-12 col-lg-2">
+      Notes
+    </div>
+    <div class="col col-12 col-lg-2">
+      Claimed?
+    </div>
+    <div class="col col-12 col-lg-1">
+      Student
+    </div>
+  </div>
+</div>
+<hr>
+<div class="container">
+  <div class="row">
+    <% slots.forEach(function(slot){ %>
+      <div class="col col-12 col-lg-2">
+        <%= slot.physName %>
+      </div>
+      <div class="col col-12 col-lg-1">
+        <%= slot.date %>
+      </div>
+      <div class="col col-12 col-lg-2">
+        <%= slot.timeStart %> to     <%= slot.timeEnd %>
+      </div>
+      <div class="col col-12 col-lg-2">
+        <%= slot.location %>
+      </div>
+      <div class="col col-12 col-lg-2">
+        <%= slot.notes %>
+      </div>
+      <div class="col col-12 col-lg-2">
+        <% if (slot.studentEmail){ %>
+          Yes
+        <% } else { %>
+          No
+        <% } %>
+      </div>
+      <div class="col col-12 col-lg-1">
+        <% if (slot.studentEmail){ %>
+          <%=slot.studentEmail %>
+        <% } else { %>
+          -
+        <% } %>
+      </div>
+    <% }) %>
+  </div>
+</div>
+
+<%- include("./partials/footer"); -%>
