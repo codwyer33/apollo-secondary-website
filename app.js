@@ -92,8 +92,17 @@ app.get("/view-slots", function(req,res){
           const xDay = x.date.getDate();
           const xYear = x.date.getFullYear();
           x.dDate = xMonth.concat(' ',xDay,', ', xYear);
+        }
+        if(x.timeStart && x.timeEnd){
+          var xTimeStart = x.timeStart.getHours()-3; xTimeStart>12 ? xTimeStart=(xTimeStart-12).toString() : xTimeStart=xTimeStart.toString()
+          var xTimeEnd = x.timeEnd.getHours()-3; xTimeEnd>12 ? xTimeEnd=(xTimeEnd-12).toString() : xTimeEnd=xTimeEnd.toString()
+          var xTimeSM = x.timeStart.getMinutes().toString(); xTimeSM == "0" ? xTimeSM = "00" : null
+          var xTimeEM = x.timeEnd.getMinutes().toString(); xTimeEM == "0" ? xTimeEM = "00" : null
+          var ind1 = ''; var ind2 ='';
+          x.timeStart.getHours()>12 ? ind1 = "pm" : ind1 = "am"
+          x.timeEnd.getHours()>12 ? ind2 = "pm" : ind2 = "am"
 
-          console.log(x.dDate);
+          x.dTime = xTimeStart.concat(':',xTimeSM,ind1,' to ', xTimeEnd,':',xTimeEM,ind2);
         }
         xArray.push(x);
       });
