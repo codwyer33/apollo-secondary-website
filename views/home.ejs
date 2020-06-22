@@ -1,12 +1,14 @@
 <%- include("./partials/header"); -%>
 
-<h1>View Shadow Slots</h1>
+<h1>Home</h1>
+
+<h2>(Student View) Shadow Slots</h2>
 <div class="container">
   <div class="row">
     <div class="col col-12 col-lg-2">
-      Physician
+      Physician Name
     </div>
-    <div class="col col-12 col-lg-1">
+    <div class="col col-12 col-lg-2">
       Date
     </div>
     <div class="col col-12 col-lg-2">
@@ -19,26 +21,22 @@
       Notes
     </div>
     <div class="col col-12 col-lg-2">
-      Claimed?
-    </div>
-    <div class="col col-12 col-lg-1">
-      Student
+      Claim
     </div>
   </div>
 </div>
 <hr>
-<% slots.forEach(function(slot){ %>
-
 <div class="container">
   <div class="row">
+    <% slots.forEach(function(slot){ %>
       <div class="col col-12 col-lg-2">
-        <%= slot.physName %>, <%=slot.physSpecialty %>
-      </div>
-      <div class="col col-12 col-lg-1">
-        <%= slot.dDate %>
+        <%= slot.physName %>, <%= slot.physSpecialty %>
       </div>
       <div class="col col-12 col-lg-2">
-        <%= slot.timeStart %> to     <%= slot.timeEnd %>
+        <%= slot.date %>
+      </div>
+      <div class="col col-12 col-lg-2">
+        <%= slot.timeStart %> to <%= slot.timeEnd %>
       </div>
       <div class="col col-12 col-lg-2">
         <%= slot.location %>
@@ -47,23 +45,19 @@
         <%= slot.notes %>
       </div>
       <div class="col col-12 col-lg-2">
-        <% if (slot.studentEmail){ %>
-          Yes
+        <% if (slot.studentEmail) { %>
+          Claimed
         <% } else { %>
-          No
-        <% } %>
+            <form class="" action="/claim" method="post">
+              <input type="hidden" name="user" value="<%=user%>">
+              <button type="submit" name="button" class="btn">Claim</button>
+            </form>
+          <% } %>
+
       </div>
-      <div class="col col-12 col-lg-1">
-        <% if (slot.studentEmail){ %>
-          <%=slot.studentEmail %>
-        <% } else { %>
-          -
-        <% } %>
-      </div>
+    <% }) %>
   </div>
 </div>
-<hr />
-<% }) %>
 
 
 <%- include("./partials/footer"); -%>
