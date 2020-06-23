@@ -3,13 +3,13 @@
   width:100%;
   min-height:650px;
   margin:0;
-  padding:90px;
+  padding:60px;
   padding-top:60px;
 /* background-image: url("https://www.transparenttextures.com/patterns/brushed-alum.png"); */
 }
 @media only screen and (max-width:700px){
   #main{
-    padding:10px;
+    padding:15px;
     padding-top:40px;
   }
 }
@@ -23,7 +23,7 @@
 }
 
 .col{
-  margin-top:30px;
+  margin-top:10px;
 }
 body{
   background-color: #bfc1c9;
@@ -115,3 +115,19 @@ body{
   min-height:390px;
   /* text-align: center; */
 }
+
+/* Admin View Shadow Slots */
+#view-shadow-slots h1 {
+  margin-bottom:60px;
+}
+#view-shadow-slots .row {
+  padding-left:15px;
+  padding-right:15px;
+  margin-left:15px;
+  margin-right:15px;
+}
+/* #view-shadow-slots .col {
+  padding-left:10px;
+  padding-right:10px;
+
+} */

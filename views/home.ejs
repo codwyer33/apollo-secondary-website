@@ -1,12 +1,10 @@
 <%- include("./partials/header"); -%>
-
-<h1>Home</h1>
-
-<h2>(Student View) Shadow Slots</h2>
-<div class="container">
+<div id="view-shadow-slots">
+<h1>View Shadow Slots</h1>
+<!-- <div class="container"> -->
   <div class="row">
     <div class="col col-12 col-lg-2">
-      Physician Name
+      Physician
     </div>
     <div class="col col-12 col-lg-2">
       Date
@@ -21,22 +19,21 @@
       Notes
     </div>
     <div class="col col-12 col-lg-2">
-      Claim
+      Claimed?
     </div>
   </div>
-</div>
 <hr>
-<div class="container">
-  <div class="row">
-    <% slots.forEach(function(slot){ %>
+<% slots.forEach(function(slot){ %>
+
+<div class="row">
       <div class="col col-12 col-lg-2">
-        <%= slot.physName %>, <%= slot.physSpecialty %>
+        <%= slot.physName %>, <%=slot.physSpecialty %>
       </div>
       <div class="col col-12 col-lg-2">
-        <%= slot.date %>
+        <%= slot.dDate %>
       </div>
       <div class="col col-12 col-lg-2">
-        <%= slot.timeStart %> to <%= slot.timeEnd %>
+        <%= slot.dTime %>
       </div>
       <div class="col col-12 col-lg-2">
         <%= slot.location %>
@@ -49,15 +46,19 @@
           Claimed
         <% } else { %>
             <form class="" action="/claim" method="post">
-              <input type="hidden" name="user" value="<%=user%>">
+              <input type="hidden" name="userFName" value="<%=user.fName%>">
+              <input type="hidden" name="userLName" value="<%=user.lName%>">
+              <input type="hidden" name="userEmail" value="<%=user.email%>">
+              <input type="hidden" name="slotId" value="<%=slot._id%>">
               <button type="submit" name="button" class="btn">Claim</button>
             </form>
           <% } %>
 
       </div>
-    <% }) %>
-  </div>
-</div>
+    </div>
 
+<hr />
+<% }) %>
+</div>
 
 <%- include("./partials/footer"); -%>

@@ -63,16 +63,29 @@ const Student = mongoose.model("Student", studentSchema);
 
 //Currently doesn't work:
 function setDisplayValues(slots){
-  const newArray = [];
+  const xArray = [];
   slots.forEach(function(slot){
-    const newSlot = slot;
-    if (slot.date){
-      // newSlot.date = ;
-      console.log(newSlot);
+    const x = slot;
+    if(x.date){
+      const xMonth = months[x.date.getMonth()];
+      const xDay = x.date.getDate();
+      const xYear = x.date.getFullYear();
+      x.dDate = xMonth.concat(' ',xDay,', ', xYear);
     }
-    newArray.push(newSlot);
+    if(x.timeStart && x.timeEnd){
+      var xTimeStart = x.timeStart.getHours()-3; xTimeStart>12 ? xTimeStart=(xTimeStart-12).toString() : xTimeStart=xTimeStart.toString()
+      var xTimeEnd = x.timeEnd.getHours()-3; xTimeEnd>12 ? xTimeEnd=(xTimeEnd-12).toString() : xTimeEnd=xTimeEnd.toString()
+      var xTimeSM = x.timeStart.getMinutes().toString(); xTimeSM == "0" ? xTimeSM = "00" : null
+      var xTimeEM = x.timeEnd.getMinutes().toString(); xTimeEM == "0" ? xTimeEM = "00" : null
+      var ind1 = ''; var ind2 ='';
+      x.timeStart.getHours()>12 ? ind1 = "pm" : ind1 = "am"
+      x.timeEnd.getHours()>12 ? ind2 = "pm" : ind2 = "am"
+
+      x.dTime = xTimeStart.concat(':',xTimeSM,ind1,' to ', xTimeEnd,':',xTimeEM,ind2);
+    }
+    xArray.push(x);
   });
-  return(newArray);
+  return xArray;
 };
 
 //GET
@@ -84,29 +97,8 @@ app.get("/view-slots", function(req,res){
     if(err){
       console.log(err);
     } else {
-      const xArray = [];
-      slots.forEach(function(slot){
-        const x = slot;
-        if(x.date){
-          const xMonth = months[x.date.getMonth()];
-          const xDay = x.date.getDate();
-          const xYear = x.date.getFullYear();
-          x.dDate = xMonth.concat(' ',xDay,', ', xYear);
-        }
-        if(x.timeStart && x.timeEnd){
-          var xTimeStart = x.timeStart.getHours()-3; xTimeStart>12 ? xTimeStart=(xTimeStart-12).toString() : xTimeStart=xTimeStart.toString()
-          var xTimeEnd = x.timeEnd.getHours()-3; xTimeEnd>12 ? xTimeEnd=(xTimeEnd-12).toString() : xTimeEnd=xTimeEnd.toString()
-          var xTimeSM = x.timeStart.getMinutes().toString(); xTimeSM == "0" ? xTimeSM = "00" : null
-          var xTimeEM = x.timeEnd.getMinutes().toString(); xTimeEM == "0" ? xTimeEM = "00" : null
-          var ind1 = ''; var ind2 ='';
-          x.timeStart.getHours()>12 ? ind1 = "pm" : ind1 = "am"
-          x.timeEnd.getHours()>12 ? ind2 = "pm" : ind2 = "am"
-
-          x.dTime = xTimeStart.concat(':',xTimeSM,ind1,' to ', xTimeEnd,':',xTimeEM,ind2);
-        }
-        xArray.push(x);
-      });
-      res.render("view-slots", {slots:xArray});
+      const array = setDisplayValues(slots);
+      res.render("view-slots", {slots:array});
     }
   })
 });
@@ -146,8 +138,8 @@ app.post("/create-account", function(req,res){
                   if(err){
                     console.log(err);
                   } else {
-                    res.render("home", {user:newStudent, slots:slots});
-                  }
+                    const array = setDisplayValues(slots);
+                    res.render("home", {user:newStudent, slots:array});                  }
                 });
               }
             });
@@ -177,7 +169,8 @@ app.post("/login", function(req,res){ //STUDENT LOGIN
                 if(err){
                   console.log(err);
                 } else {
-                  res.render("home", {user:foundUser, slots:slots});
+                  const array = setDisplayValues(slots);
+                  res.render("home", {user:foundUser, slots:array});
                 }
               });
             } else {
@@ -188,6 +181,23 @@ app.post("/login", function(req,res){ //STUDENT LOGIN
       }
     }
   });
+});
+app.post("/claim", function(req,res){
+  const userFName = req.body.userFName;
+  const userLName = req.body.userLName;
+  const userName = userFName.concat(" ",userLName);
+  const userEmail = req.body.userEmail;
+  const slotId = req.body.slotId;
+  console.log(userName+" "+userEmail+" "+slotId);
+
+  Slot.updateOne({_id:slotId},{studentName:userName, studentEmail:userEmail}, function(err){
+    if(err){
+      console.log(err);
+    } else {
+      // res.redirect("/");
+    }
+  });
+
 });
 
 
