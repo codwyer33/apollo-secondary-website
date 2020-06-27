@@ -6,6 +6,9 @@ const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const months = ["January","February","March","April","May","June","July","August","September","October","November","December",]
+var maxSlots = 2;
+var matchingLocked = false;
+var groupsAllowed = [];
 
 const app = express();
 app.use(express.static('public'));
@@ -56,15 +59,16 @@ const studentSchema = new mongoose.Schema({
   lName:String,
   password:String,
   email:String,
-  appId:String
+  appId:String,
+  group:String
 });
 const Student = mongoose.model("Student", studentSchema);
 
-
-//Currently doesn't work:
 function setDisplayValues(slots){
   const xArray = [];
-  slots.forEach(function(slot){
+  const sortedSlots = slots.sort((a, b) => a.date - b.date)
+
+  sortedSlots.forEach(function(slot){
     const x = slot;
     if(x.date){
       const xMonth = months[x.date.getMonth()];
@@ -98,7 +102,7 @@ app.get("/view-slots", function(req,res){
       console.log(err);
     } else {
       const array = setDisplayValues(slots);
-      res.render("view-slots", {slots:array});
+      res.render("view-slots", {slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked});
     }
   })
 });
@@ -139,7 +143,7 @@ app.post("/create-account", function(req,res){
                     console.log(err);
                   } else {
                     const array = setDisplayValues(slots);
-                    res.render("home", {user:newStudent, slots:array});                  }
+                    res.render("home", {user:newStudent, slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked});                  }
                 });
               }
             });
@@ -170,7 +174,7 @@ app.post("/login", function(req,res){ //STUDENT LOGIN
                   console.log(err);
                 } else {
                   const array = setDisplayValues(slots);
-                  res.render("home", {user:foundUser, slots:array});
+                  res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked});
                 }
               });
             } else {
@@ -188,16 +192,110 @@ app.post("/claim", function(req,res){
   const userName = userFName.concat(" ",userLName);
   const userEmail = req.body.userEmail;
   const slotId = req.body.slotId;
-  console.log(userName+" "+userEmail+" "+slotId);
 
   Slot.updateOne({_id:slotId},{studentName:userName, studentEmail:userEmail}, function(err){
     if(err){
       console.log(err);
     } else {
-      // res.redirect("/");
+      Student.findOne({email:userEmail},function(err,foundUser){
+        if(err){
+          console.log(err);
+        } else {
+          Slot.find(function(err,slots){
+            if(err){
+              console.log(err);
+            } else {
+              const array = setDisplayValues(slots);
+              res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked});
+            }
+          });
+        }
+      });
+    }
+  });
+});
+app.post("/unclaim", function(req,res){
+  const slotId = req.body.slotId;
+  const userEmail = req.body.userEmail;
+
+  Slot.updateOne({_id:slotId},{studentName:null, studentEmail:null}, function(err){
+    if(err){
+      console.log(err);
+    } else {
+      Student.findOne({email:userEmail},function(err,foundUser){
+        if(err){
+          console.log(err);
+        } else {
+          Slot.find(function(err,slots){
+            if(err){
+              console.log(err);
+            } else {
+              const array = setDisplayValues(slots);
+              res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked});
+            }
+          });
+        }
+      });
     }
   });
 
+});
+app.post("/admin-maxSlots", function(req,res){
+  maxSlots = req.body.maxSlots;
+  matchingLocked = req.body.matchingLock;
+  const uploadUserArray = req.body.uploadUsers;
+  let n = [];
+  var uploadUsers = uploadUserArray.split("###");
+  for(let i=0; i<uploadUsers.length; i++){
+   n.push(uploadUsers[i].split("///"));
+  }
+  n.forEach(function(user){
+    const email = user[0];
+    const password = user[1];
+    const group = user[2];
+
+    if(email&&password&&group){
+      bcrypt.hash(password,saltRounds,function(err,hashedPassword){
+        if(err){
+          console.log(err);
+        } else {
+          const newStudent = new Student ({
+            email:email,
+            password:hashedPassword,
+            group:group
+          });
+          newStudent.save(function(err){
+            if(err){
+              console.log(err);
+            } else {
+              console.log("Saved");
+            }
+          });
+        }
+      });
+    }
+
+  //   if(email&&password&&group){
+  //   bcrypt.hash(password, saltRounds, function(err, hashResult){
+  //     if(err){
+  //       res.render("landing");
+  //     } else {
+  //       const newStudent = new Student ({
+  //         email:email,
+  //         password:hashResult,
+  //         group:group
+  //       });
+  //       newStudent.save(function(err){
+  //         if(err){
+  //           res.render("landing");
+  //         }
+  //       });
+  //     }
+  //   });
+  // }
+  });
+
+  res.redirect("/");
 });
 
 

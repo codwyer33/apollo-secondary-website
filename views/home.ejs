@@ -1,6 +1,67 @@
 <%- include("./partials/header"); -%>
 <div id="view-shadow-slots">
-<h1>View Shadow Slots</h1>
+<% if(matchingLocked == "true"){ %>
+  <h1>Your Matches</h1>
+  <% var count = 0 %>
+  <% slots.forEach(function(slot){ %>
+    <% if(slot.studentEmail && slot.studentEmail == user.email){%>
+      <% count++; %>
+      <hr />
+      <div class="row">
+        <div class="col col-lg-12">
+          <%= slot.physName %>, <%=slot.physSpecialty %> <br />
+          <%= slot.dDate %>, <%= slot.dTime %> <br />
+          <%= slot.location %> <br />
+          <% if(slot.notes){ %>
+          <p class="italics">  Notes: <%= slot.notes %><br /></p>
+          <% }%>
+        </div>
+      </div>
+    <% } %>
+
+  <% }) %>
+  <br /><br />
+  <h4>All matches are locked at this time. If you have any questions or concerns, please contact apolloyimde@gmail.com.</h4>
+
+<% } else { %>
+<h1>Your Matches</h1>
+<% var count = 0 %>
+<% slots.forEach(function(slot){ %>
+  <% if(slot.studentEmail && slot.studentEmail == user.email){%>
+    <% count++; %>
+    <hr />
+    <div class="row">
+      <div class="col col-lg-9">
+        <%= slot.physName %>, <%=slot.physSpecialty %> <br />
+        <%= slot.dDate %>, <%= slot.dTime %> <br />
+        <%= slot.location %> <br />
+        <% if(slot.notes){ %>
+        <p class="italics">  Notes: <%= slot.notes %><br /></p>
+        <% }%>
+      </div>
+      <div class="col col-lg-3">
+        <form action="/unclaim" method="post">
+          <input type="hidden" name="userEmail" value="<%=user.email%>">
+          <input type="hidden" name="slotId" value="<%=slot._id%>">
+          <button type="submit" name="button" class="btn">Remove</button>
+        </form>
+      </div>
+    </div>
+  <% } %>
+
+<% }) %>
+<hr /><br />
+<% if(count<maxSlots){ %>
+<h4>*You may add <%=(maxSlots-count)%> more match(es) at this time.</h4>
+<% } else {%>
+<h4>*You have the maximum number of matches at this time. </h4>
+<% }%>
+<br /><br /><br /><br />
+
+
+
+
+<h1>Shadow Slots</h1>
 <!-- <div class="container"> -->
   <div class="row">
     <div class="col col-12 col-lg-2">
@@ -19,7 +80,7 @@
       Notes
     </div>
     <div class="col col-12 col-lg-2">
-      Claimed?
+      Matched?
     </div>
   </div>
 <hr>
@@ -42,15 +103,18 @@
         <%= slot.notes %>
       </div>
       <div class="col col-12 col-lg-2">
+        <% var btnProp = null; %>
+        <% count >= maxSlots ? btnProp = "disabled" : null %>
+
         <% if (slot.studentEmail) { %>
-          Claimed
+          <p class="italics">Matched</p>
         <% } else { %>
             <form class="" action="/claim" method="post">
               <input type="hidden" name="userFName" value="<%=user.fName%>">
               <input type="hidden" name="userLName" value="<%=user.lName%>">
               <input type="hidden" name="userEmail" value="<%=user.email%>">
               <input type="hidden" name="slotId" value="<%=slot._id%>">
-              <button type="submit" name="button" class="btn">Claim</button>
+              <button type="submit" name="button" class="btn <%=btnProp%>" <%=btnProp%>>Match</button>
             </form>
           <% } %>
 
@@ -59,6 +123,8 @@
 
 <hr />
 <% }) %>
+<% } %>
 </div>
+
 
 <%- include("./partials/footer"); -%>

@@ -1,6 +1,25 @@
 <%- include("./partials/header"); -%>
 <div id="view-shadow-slots">
-<h1>View Shadow Slots</h1>
+<h1>Controls</h1>
+
+<form class="" action="/admin-maxSlots" method="post">
+  <label>Max Slots Per Student:</label>
+  <input type="number" name="maxSlots" value=<%=maxSlots%>><br /><br />
+  <label>Matching allowed for: (Year joined, session joined, grad year)</label>
+  <% var unlocked = "selected"; var locked = null %>
+  <% if(matchingLocked=="true"){ unlocked = null; locked="selected"}%>
+  <!-- LIST ALL GROUPS WITH CHECKBOXES -->
+  <!-- <select name="matchingLock">
+    <option value=false <unlocked%>>Unlocked</option>
+    <option value=true <locked%>>Locked</option>
+  </select> -->
+  <br />
+  <label>Upload user/passwords/groups:</label>
+  <input type="text" name="uploadUsers">
+  <br />  <br />
+  <button type="submit" class="btn" name="button">Update</button>
+</form>
+<h1 id="shadow-slots-head">Shadow Slots</h1>
 <!-- <div class="container"> -->
   <div class="row">
     <div class="col col-12 col-lg-2">
@@ -19,7 +38,7 @@
       Notes
     </div>
     <div class="col col-12 col-lg-2">
-      Claimed?
+      Matched?
     </div>
   </div>
 <hr>

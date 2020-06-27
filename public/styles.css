@@ -21,12 +21,18 @@
 .btn:hover{
   background-color:gray;
 }
+.disabled:hover{
+  background-color: lightgray;
+}
 
 .col{
   margin-top:10px;
 }
 body{
   background-color: #bfc1c9;
+}
+.italics {
+  font-style: italic;
 }
 
 /*  Header */
@@ -52,6 +58,12 @@ body{
 }
 #header a{
   text-decoration: none;
+}
+/* Footer */
+#footer{
+  min-height:100px;
+  background-color:#bfc1c9;
+  /* margin-top:50px; */
 }
 
 /* Landing */
@@ -118,7 +130,10 @@ body{
 
 /* Admin View Shadow Slots */
 #view-shadow-slots h1 {
-  margin-bottom:60px;
+  margin-bottom:30px;
+}
+#shadow-slots-head{
+  margin-top:60px;
 }
 #view-shadow-slots .row {
   padding-left:15px;
@@ -129,5 +144,9 @@ body{
 /* #view-shadow-slots .col {
   padding-left:10px;
   padding-right:10px;
-
 } */
+
+/* Student home */
+.claimed-slot{
+  padding-left:40px;
+}
