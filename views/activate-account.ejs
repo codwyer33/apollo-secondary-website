@@ -1,18 +1,24 @@
 <%- include("./partials/header"); -%>
+<div id="login-page">
 
-<h1>Activate Account</h1>
-<div class="col col-12 col-md-6">
-  <div class="login-card">
-    <h2>Create Account</h2>
-    <h3><%=errM%></h3>
-    <form class="" action="/create-account" method="post">
-      <input class="top-input" type="text" name="fName" value="" placeholder="First Name" required=true><br/>
-      <input type="text" name="lName" value="" placeholder="Last Name" required=true><br/>
-      <input type="email" name="email" value="" placeholder="Email" required=true><br/>
-      <input class="btm-input" type="password" name="password" value="" placeholder="Password" required=true>
-      <br />
-      <button type="submit" name="button" class="btn">Submit</button>
-    </form>
+  <h1>Activate Account</h1>
+  <div id="login-container" class="container">
+    <div class="row">
+      <div class="col col-12 col-md-6">
+        <div class="login-card">
+          <h2>Enter Information</h2>
+          <h3><%=errM%></h3>
+          <form class="" action="/activate-account" method="post">
+            <input class="top-input" type="text" name="fName" value="" placeholder="First Name" required=true><br/>
+            <input type="text" name="lName" value="" placeholder="Last Name" required=true><br/>
+            <input type="email" name="email" value="" placeholder="Email" required=true><br/>
+            <input class="btm-input" type="password" name="password" value="" placeholder="Password" required=true>
+            <br />
+            <button type="submit" name="button" class="btn">Submit</button>
+          </form>
+        </div>
+      </div>
+  </div>
   </div>
 </div>
 

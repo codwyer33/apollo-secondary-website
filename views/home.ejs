@@ -1,5 +1,8 @@
 <%- include("./partials/header"); -%>
 <div id="view-shadow-slots">
+  <% if(errM){%>
+    <h6><%=errM%></h6>
+  <%}%>
 <% if(matchingLocked == "true"){ %>
   <h1>Your Matches</h1>
   <% var count = 0 %>

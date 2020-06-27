@@ -119,14 +119,13 @@ body{
   border-radius:0 0 4px 4px;
 }
 /* Home */
-#home-page .home-card{
+/* #home-page .home-card{
   background-color: #ccdaf0;
   padding:40px;
   margin:20px;
   border-radius:5px;
   min-height:390px;
-  /* text-align: center; */
-}
+} */
 
 /* Admin View Shadow Slots */
 #view-shadow-slots h1 {

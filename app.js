@@ -109,52 +109,63 @@ app.get("/view-slots", function(req,res){
 app.get("/login", function(req,res){
   res.render("login", {errM:"", errM2:""});
 });
+app.get("/activate-account", function(req,res){
+  res.render("activate-account", {errM:"", errM2:""});
+});
 
 //POST
-app.post("/create-account", function(req,res){
-  const email = req.body.email;
+app.post("/activate-account", function(req,res){
+  const email = _.toLower(req.body.email);
   const password = req.body.password;
   const fName = req.body.fName;
   const lName = req.body.lName;
+  console.log(email);
 
-  Student.findOne({email:email}, function(err, result){
+  Student.findOne({email:email}, function(err, foundUser){
     if(err){
-      res.render("login", {errM:"An error occured. Please try again.", errM2:""});
-    } else {
-      if(result){ //found a user with that email
-        res.render("login", {errM:"An account with this email already exists. Please log in.", errM2:""});
-      } else { //no user has that email
-        bcrypt.hash(password, saltRounds, function(err, hashResult){
-          if(err){
-            res.render("login", {errM:"An error occured. Please try again.", errM2:""});
-          } else {
-            const newStudent = new Student ({
-              fName:_.capitalize(fName),
-              lName:_.capitalize(lName),
-              email:email,
-              password:hashResult
-            });
-            newStudent.save(function(err){
-              if(err){
-                res.render("login", {errM:"An error occured. Please try again.", errM2:""});
-              } else {
-                Slot.find(function(err,slots){
+      console.log(err);
+      res.render("activate-account", {errM:"An error occured. Please try again or contact apolloyimde@gmail.com."})
+    } else { //no error
+      if (foundUser){
+        if(foundUser.fName){
+          res.render("activate-account", {errM:"An account with this email has already been activated. Please use the login page or contact apolloyimde@gmail.com."})
+        }else{
+          bcrypt.compare(password,foundUser.password, function(err, result){
+            if(err){
+              console.log(err);
+              res.render("activate-account", {errM:"An error occured. Please try again or contact apolloyimde@gmail.com."})
+            } else {
+              if(result){ //SUCCESS
+                Student.updateOne({email:email}, {fName:_.startCase(req.body.fName), lName:_.startCase(req.body.lName)}, function(err){
                   if(err){
                     console.log(err);
+                    res.render("activate-account", {errM:"An error occured. Please try again or contact apolloyimde@gmail.com."})
                   } else {
-                    const array = setDisplayValues(slots);
-                    res.render("home", {user:newStudent, slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked});                  }
+                    Slot.find(function(err,slots){
+                      if(err){
+                        console.log(err);
+                      } else {
+                        console.log("SUCCESS");
+                        const array = setDisplayValues(slots);
+                        res.render("home", {errM:"Account activated!",user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked});
+                      }
+                    });
+                  }
                 });
+              } else { //wrong password
+                res.render("activate-account", {errM: "Incorrect password. Please use the login information sent to you or contact apolloyimde@gmail.com."})
               }
-            });
-          }
-        })
+            }
+          });
+        }
+      } else {
+        res.render("activate-account", {errM:"Email not found. Please use the login information sent to you or contact apolloyimde@gmail.com."})
       }
     }
-  });
+  })
 });
 app.post("/login", function(req,res){ //STUDENT LOGIN
-  const email = req.body.email;
+  const email = _.toLower(req.body.email);
   const password = req.body.password;
 
   Student.findOne({email:email}, function(err, foundUser){
@@ -164,6 +175,7 @@ app.post("/login", function(req,res){ //STUDENT LOGIN
       if(!foundUser){ //no user has that email
         res.render("login", {errM:"", errM2:"Username or password was incorrect."});
       } else { //found a user with that email
+        if(foundUser.fName){
         bcrypt.compare(password, foundUser.password, function(err, result){
           if(err){
             res.render("login", {errM:"", errM2:"An error occured. Please try again.!"});
@@ -174,14 +186,17 @@ app.post("/login", function(req,res){ //STUDENT LOGIN
                   console.log(err);
                 } else {
                   const array = setDisplayValues(slots);
-                  res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked});
+                  res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked, errM:""});
                 }
               });
             } else {
               res.render("login", {errM:"", errM2:"Username or password was incorrect."});
             }
           }
-        })
+        });
+      } else {
+        res.render("login", {errM:"", errM2:"Account not activated. Please activate your account or contact apolloyimde@gmail.com."});
+      }
       }
     }
   });
@@ -190,7 +205,7 @@ app.post("/claim", function(req,res){
   const userFName = req.body.userFName;
   const userLName = req.body.userLName;
   const userName = userFName.concat(" ",userLName);
-  const userEmail = req.body.userEmail;
+  const userEmail = _.toLower(req.body.userEmail);
   const slotId = req.body.slotId;
 
   Slot.updateOne({_id:slotId},{studentName:userName, studentEmail:userEmail}, function(err){
@@ -206,7 +221,7 @@ app.post("/claim", function(req,res){
               console.log(err);
             } else {
               const array = setDisplayValues(slots);
-              res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked});
+              res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked,errM:"Successfully matched."});
             }
           });
         }
@@ -216,7 +231,7 @@ app.post("/claim", function(req,res){
 });
 app.post("/unclaim", function(req,res){
   const slotId = req.body.slotId;
-  const userEmail = req.body.userEmail;
+  const userEmail = _.toLower(req.body.userEmail);
 
   Slot.updateOne({_id:slotId},{studentName:null, studentEmail:null}, function(err){
     if(err){
@@ -231,7 +246,7 @@ app.post("/unclaim", function(req,res){
               console.log(err);
             } else {
               const array = setDisplayValues(slots);
-              res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked});
+              res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked, errM:"Successfully removed slot."});
             }
           });
         }
@@ -260,7 +275,7 @@ app.post("/admin-maxSlots", function(req,res){
           console.log(err);
         } else {
           const newStudent = new Student ({
-            email:email,
+            email:_.toLower(email),
             password:hashedPassword,
             group:group
           });
