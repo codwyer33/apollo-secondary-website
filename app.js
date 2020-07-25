@@ -6,9 +6,6 @@ const _ = require('lodash');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const months = ["January","February","March","April","May","June","July","August","September","October","November","December",]
-var maxSlots = 2;
-var matchingLocked = false;
-var groupsAllowed = [];
 
 const app = express();
 app.use(express.static('public'));
@@ -64,6 +61,13 @@ const studentSchema = new mongoose.Schema({
 });
 const Student = mongoose.model("Student", studentSchema);
 
+//INIT code
+var maxSlots = 2;
+var allGroups = [];
+// var allowedGroups =[];
+
+updateGroups();
+
 function setDisplayValues(slots){
   const xArray = [];
   const sortedSlots = slots.sort((a, b) => a.date - b.date)
@@ -92,6 +96,54 @@ function setDisplayValues(slots){
   return xArray;
 };
 
+//FUNCTIONS
+function updateGroups(){
+  Student.find(function(err, students){
+    if(err){
+      console.log(err);
+    } else {
+      var studentGroups = [];
+      students.forEach(function(student){
+        let duplicate = false;
+        let thisStudent = student;
+        for (let i = 0; i<allGroups.length; i++){
+          if (thisStudent.group == allGroups[i][0]){
+            duplicate = true;
+            break;
+          }
+        }
+        if (duplicate == false){
+          allGroups.push([student.group, true]);
+        }
+      });
+
+      // Removes duplicate group names
+      // for(let i = 0; i<studentGroups.length; i++){
+      //   for(let j = i+1; j<a.length; j++) {
+      //     if(a[j] == a[i]){
+      //       a.splice(j,1);
+      //     }
+      //   }
+      // }
+    }
+    // allGroups = a;
+    // for (let i = 0; i<allGroups.length; i++){
+    //   allGroups[i][1] = false;
+    // }
+  });
+}
+
+function setMatchingLocked(student){
+  for(let i = 0; i<allGroups.length; i++){
+    if(allGroups[i][0] == student.group){
+      var matchingLocked = allGroups[i][1];
+      console.log(allGroups[i]);
+      break;
+    }
+  }
+  return matchingLocked;
+}
+
 //GET
 app.get("/", function(req,res){
   res.render("landing");
@@ -101,8 +153,9 @@ app.get("/view-slots", function(req,res){
     if(err){
       console.log(err);
     } else {
+      updateGroups();
       const array = setDisplayValues(slots);
-      res.render("view-slots", {slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked});
+      res.render("view-slots", {slots:array, maxSlots:maxSlots, allGroups:allGroups.sort()});
     }
   })
 });
@@ -147,7 +200,8 @@ app.post("/activate-account", function(req,res){
                       } else {
                         console.log("SUCCESS");
                         const array = setDisplayValues(slots);
-                        res.render("home", {errM:"Account activated!",user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked});
+
+                        res.render("home", {errM:"Account activated!",user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser)});
                       }
                     });
                   }
@@ -185,8 +239,10 @@ app.post("/login", function(req,res){ //STUDENT LOGIN
                 if(err){
                   console.log(err);
                 } else {
+                  // let matchingLocked = setMatchingLocked(foundUser);
                   const array = setDisplayValues(slots);
-                  res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked, errM:""});
+
+                  res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser), errM:""});
                 }
               });
             } else {
@@ -221,7 +277,8 @@ app.post("/claim", function(req,res){
               console.log(err);
             } else {
               const array = setDisplayValues(slots);
-              res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked,errM:"Successfully matched."});
+
+              res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser),errM:"Successfully matched."});
             }
           });
         }
@@ -246,7 +303,7 @@ app.post("/unclaim", function(req,res){
               console.log(err);
             } else {
               const array = setDisplayValues(slots);
-              res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:matchingLocked, errM:"Successfully removed slot."});
+              res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser), errM:"Successfully removed slot."});
             }
           });
         }
@@ -290,27 +347,25 @@ app.post("/admin-maxSlots", function(req,res){
       });
     }
 
-  //   if(email&&password&&group){
-  //   bcrypt.hash(password, saltRounds, function(err, hashResult){
-  //     if(err){
-  //       res.render("landing");
-  //     } else {
-  //       const newStudent = new Student ({
-  //         email:email,
-  //         password:hashResult,
-  //         group:group
-  //       });
-  //       newStudent.save(function(err){
-  //         if(err){
-  //           res.render("landing");
-  //         }
-  //       });
-  //     }
-  //   });
-  // }
   });
 
   res.redirect("/");
+});
+
+app.post("/admin-updateAccess", function(req,res){
+  var checkedBoxes = [];
+
+  for (let i = 0; i<allGroups.length; i++) {
+    const box = req.body[allGroups[i][0]];
+    if(box){
+      allGroups[i][1] = true;
+    } else {
+      allGroups[i][1] = false;
+    }
+  }
+  console.log(allGroups);
+
+  res.redirect("/view-slots");
 });
 
 

@@ -1,9 +1,15 @@
 <%- include("./partials/header"); -%>
 <div id="view-shadow-slots">
   <% if(errM){%>
-    <h6><%=errM%></h6>
+    <div class="alert alert-success">
+      <h6 class="mb-0"><%=errM%>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </h6>
+    </div>
   <%}%>
-<% if(matchingLocked == "true"){ %>
+<% if(matchingLocked == false){ %>
   <h1>Your Matches</h1>
   <% var count = 0 %>
   <% slots.forEach(function(slot){ %>
@@ -23,8 +29,9 @@
     <% } %>
 
   <% }) %>
+  <hr />
   <br /><br />
-  <h4>All matches are locked at this time. If you have any questions or concerns, please contact apolloyimde@gmail.com.</h4>
+  <h4>Your matches are locked at this time. If you have any questions or concerns, please contact apolloyimde@gmail.com.</h4>
 
 <% } else { %>
 <h1>Your Matches</h1>
