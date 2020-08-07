@@ -23,13 +23,6 @@ const adminSchema = new mongoose.Schema({
 });
 const Admin = mongoose.model("Admin", adminSchema);
 
-// const newAdmin = new Admin ({
-//   fName:"Clare",
-//   lName:"O",
-//   password:"_",
-//   email:"_"
-// });
-// newAdmin.save();
 
 const slotSchema = new mongoose.Schema({
   physName: String,
@@ -148,17 +141,9 @@ function setMatchingLocked(student){
 app.get("/", function(req,res){
   res.render("landing");
 });
-app.get("/view-slots", function(req,res){
-  Slot.find(function(err,slots){
-    if(err){
-      console.log(err);
-    } else {
-      updateGroups();
-      const array = setDisplayValues(slots);
-      res.render("view-slots", {slots:array, maxSlots:maxSlots, allGroups:allGroups.sort()});
-    }
-  })
-});
+app.get("/admin-login", function(req,res){
+  res.render("admin-login", {errM:""});
+})
 app.get("/login", function(req,res){
   res.render("login", {errM:"", errM2:""});
 });
@@ -257,6 +242,42 @@ app.post("/login", function(req,res){ //STUDENT LOGIN
     }
   });
 });
+
+app.post("/admin-login", function(req,res){
+  const email = _.toLower(req.body.email);
+  const password = req.body.password;
+
+  Admin.findOne({email:email}, function(err, foundAdmin){
+    if(err){
+      res.render("admin-login",{errM:"An error occured. Please try again."});
+    } else {
+      if(foundAdmin){
+        bcrypt.compare(password, foundAdmin.password, function(err,result){
+          if(err){
+            res.render("admin-login",{errM:"An error occured. Please try again."});
+          } else {
+            if(result){ //success!
+              Slot.find(function(err,slots){
+                if(err){
+                  console.log(err);
+                } else {
+                  updateGroups();
+                  const array = setDisplayValues(slots);
+                  res.render("admin-home", {slots:array, maxSlots:maxSlots, allGroups:allGroups.sort()});
+                }
+              });
+            } else {
+              res.render("admin-login",{errM:"Incorrect password."});
+            }
+          }
+        });
+      } else {
+        res.render("admin-login",{errM:"Email not found."});
+      }
+    }
+  });
+});
+
 app.post("/claim", function(req,res){
   const userFName = req.body.userFName;
   const userLName = req.body.userLName;
@@ -314,7 +335,7 @@ app.post("/unclaim", function(req,res){
 });
 app.post("/admin-maxSlots", function(req,res){
   maxSlots = req.body.maxSlots;
-  matchingLocked = req.body.matchingLock;
+  matchingLocked = req.body.matchingLock; //not needed?
   const uploadUserArray = req.body.uploadUsers;
   let n = [];
   var uploadUsers = uploadUserArray.split("###");
@@ -348,6 +369,41 @@ app.post("/admin-maxSlots", function(req,res){
     }
 
   });
+  // fName /// lName /// email /// password
+  const uploadAdmins = req.body.uploadAdmins;
+  var adminsArray = uploadAdmins.split("###");
+  let m = [];
+  for(let i=0; i<adminsArray.length; i++){
+    m.push(adminsArray[i].split("///"));
+  }
+  m.forEach(function(admin){
+    const fName = admin[0];
+    const lName = admin[1];
+    const email = admin[2];
+    const password = admin[3];
+
+    if(fName&&lName&&email&&password){
+      bcrypt.hash(password,saltRounds,function(err,hashedPassword){
+        if(err){
+          console.log(err);
+        } else {
+          const newAdmin = new Admin ({
+            fName:fName,
+            lName:lName,
+            email:_.toLower(email),
+            password:hashedPassword
+          });
+          newAdmin.save(function(err){
+            if(err){
+              console.log(err);
+            } else {
+              console.log("Saved");
+            }
+          });
+        }
+      });
+    }
+  })
 
   res.redirect("/");
 });
@@ -365,7 +421,7 @@ app.post("/admin-updateAccess", function(req,res){
   }
   console.log(allGroups);
 
-  res.redirect("/view-slots");
+  res.redirect("/admin-home");
 });
 
 
