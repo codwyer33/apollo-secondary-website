@@ -333,9 +333,7 @@ app.post("/unclaim", function(req,res){
   });
 
 });
-app.post("/admin-maxSlots", function(req,res){
-  maxSlots = req.body.maxSlots;
-  matchingLocked = req.body.matchingLock; //not needed?
+app.post("/admin-newAccounts", function(req,res){
   const uploadUserArray = req.body.uploadUsers;
   let n = [];
   var uploadUsers = uploadUserArray.split("###");
@@ -408,7 +406,9 @@ app.post("/admin-maxSlots", function(req,res){
   res.redirect("/");
 });
 
-app.post("/admin-updateAccess", function(req,res){
+app.post("/admin-matchSettings", function(req,res){
+  maxSlots = req.body.maxSlots;
+  matchingLocked = req.body.matchingLock; //not needed?
   var checkedBoxes = [];
 
   for (let i = 0; i<allGroups.length; i++) {
@@ -421,8 +421,42 @@ app.post("/admin-updateAccess", function(req,res){
   }
   console.log(allGroups);
 
-  res.redirect("/admin-home");
+  res.redirect("/");
 });
+
+// app.post("/admin-emails", function(req,res){
+//   var data = "";
+//   Student.find(function(err, users){
+//     if(err){
+//       console.log(err);
+//     } else{
+//       for(let i = 0; i<users.length; i++){
+//         users[i].fName ? data=data.concat(users[i].fName,"//") : data=data.concat("!null!//")
+//         users[i].lName ? data=data.concat(users[i].lName,"//") : data=data.concat("!null!//")
+//         users[i].email ? data=data.concat(users[i].email,"//") : data=data.concat("!null!//")
+//         users[i].group ? data=data.concat(users[i].group,"//") : data=data.concat("!null!//")
+//         // Slot.findOne({studentEmail:users[i].email}, function(err,slots){
+//         //   if(err){
+//         //     console.log(err);
+//         //   } else {
+//         //     if(slots){
+//         //       data.concat("SLOT HERE!!");
+//         // //       dSlots = setDisplayValues(slots)
+//         // //       dSlots.forEach(function(thisSlot){
+//         // //         data = data.concat(thisSlot.physName,"$$",thisSlot.physSpecialty,"$$");
+//         // //         thisSlot.notes ? data=data.concat(thisSlot.notes,"$$") : data=data.concat("!null!$$")
+//         // //         data = data.concat("&&");
+//         // //       });
+//         //     }
+//         //   }
+//         // });
+//         data.concat("##");
+//       }
+//       console.log(data);
+//       res.send(data);
+//     }
+//   });
+// });
 
 
 //SERVER

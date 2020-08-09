@@ -1,22 +1,26 @@
 <%- include("./partials/header"); -%>
 <div id="view-shadow-slots">
 <h1>Controls</h1>
-
-<form class="" action="/admin-maxSlots" method="post">
-  <label>Max Slots Per Student:</label>
-  <input type="number" name="maxSlots" value=<%=maxSlots%>>
-  <br /><br />
-  <label>Upload user/passwords/groups:</label>
+<hr><br />
+<form class="" action="/admin-newAccounts" method="post">
+  <h4>Create New Accounts</h4><br />
+  <label>New Student Users: (email///password///group###)</label>
   <input type="text" name="uploadUsers">
-  <br />
-  <label>Upload admins:</label>
+  <br /><br />
+  <label>New Admin: (First///Last///email///password###)</label>
   <input type="text" name="uploadAdmins">
   <br />  <br />
   <button type="submit" class="btn" name="button">Update</button>
 </form>
 <br /><br />
-<form action="/admin-updateAccess" method="post">
-  <label>Matching allowed for: (Year joined, session joined, grad year)</label>
+<hr /><br />
+<form action="/admin-matchSettings" method="post">
+  <h4>Match Settings</h4><br/>
+  <label>Max Slots Per Student:</label>
+  <input type="number" name="maxSlots" value=<%=maxSlots%>>
+  <br /><br />
+
+  <label>Matching allowed for: (Year/session joined, grad year)</label>
   <br />
   <% for(let i = 0; i<allGroups.length; i++){%>
     <% var boxStatus = "";%>
@@ -29,6 +33,13 @@
   <br />
   <button type="submit" name="button" class="btn">Update Access</button>
 </form>
+<br /><br /><hr><br />
+<form class="" action="/admin-emails" method="post">
+  <h4>Automatic Emails</h4><br />
+  <button type="submit" name="button" class="btn">Get String</button>
+</form>
+<br /><hr><br />
+
 <h1 id="shadow-slots-head">Shadow Slots</h1>
 <!-- <div class="container"> -->
   <div class="row">
