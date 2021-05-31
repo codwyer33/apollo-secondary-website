@@ -236,7 +236,7 @@ app.post("/login", function(req,res){ //STUDENT LOGIN
           }
         });
       } else {
-        res.render("login", {errM:"", errM2:"Account not activated. Please activate your account or contact apolloyimde@gmail.com."});
+        res.render("login", {errM:"", errM2:"Account not activated. Please activate your account (https://apolloprogram-match.herokuapp.com/activate-account) or contact apolloyimde@gmail.com."});
       }
       }
     }
@@ -298,7 +298,7 @@ app.post("/claim", function(req,res){
               console.log(err);
             } else {
               const array = setDisplayValues(slots);
-
+              console.log()
               res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser),errM:"Successfully matched."});
             }
           });
