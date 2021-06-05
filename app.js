@@ -152,6 +152,9 @@ app.get("/login", function(req,res){
 app.get("/activate-account", function(req,res){
   res.render("activate-account", {errM:"", errM2:""});
 });
+app.get('*', function(req, res) {
+  res.redirect('/');
+});
 
 //POST
 app.post("/activate-account", function(req,res){
