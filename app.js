@@ -27,9 +27,9 @@ const Admin = mongoose.model("Admin", adminSchema);
 const slotSchema = new mongoose.Schema({
   physName: String,
   date: Date,
-  timeStart: Date,
+  timeStart: String,
   physSpecialty:String,
-  timeEnd: Date,
+  timeEnd: String,
   location:String,
   notes:String,
   testId:String,
@@ -73,19 +73,21 @@ function setDisplayValues(slots){
       const xYear = x.date.getFullYear();
       x.dDate = xMonth.concat(' ',xDay,', ', xYear);
     }
-    if(x.timeStart && x.timeEnd){
-      var xTimeStart = x.timeStart.getHours()-3; xTimeStart>12 ? xTimeStart=(xTimeStart-12).toString() : xTimeStart=xTimeStart.toString()
-      var xTimeEnd = x.timeEnd.getHours()-3; xTimeEnd>12 ? xTimeEnd=(xTimeEnd-12).toString() : xTimeEnd=xTimeEnd.toString()
-      var xTimeSM = x.timeStart.getMinutes().toString(); xTimeSM == "0" ? xTimeSM = "00" : null
-      var xTimeEM = x.timeEnd.getMinutes().toString(); xTimeEM == "0" ? xTimeEM = "00" : null
-      var ind1 = ''; var ind2 ='';
-      x.timeStart.getHours()>12 ? ind1 = "pm" : ind1 = "am"
-      x.timeEnd.getHours()>12 ? ind2 = "pm" : ind2 = "am"
+    // if(x.timeStart && x.timeEnd){
+    //   var xTimeStart = x.timeStart.getHours()-3; xTimeStart>12 ? xTimeStart=(xTimeStart-12).toString() : xTimeStart=xTimeStart.toString()
+    //   var xTimeEnd = x.timeEnd.getHours()-3; xTimeEnd>12 ? xTimeEnd=(xTimeEnd-12).toString() : xTimeEnd=xTimeEnd.toString()
+    //   var xTimeSM = x.timeStart.getMinutes().toString(); xTimeSM == "0" ? xTimeSM = "00" : null
+    //   var xTimeEM = x.timeEnd.getMinutes().toString(); xTimeEM == "0" ? xTimeEM = "00" : null
+    //   var ind1 = ''; var ind2 ='';
+    //   x.timeStart.getHours()>12 ? ind1 = "pm" : ind1 = "am"
+    //   x.timeEnd.getHours()>12 ? ind2 = "pm" : ind2 = "am"
 
-      x.dTime = xTimeStart.concat(':',xTimeSM,ind1,' to ', xTimeEnd,':',xTimeEM,ind2);
-    }
+    //   x.dTime = xTimeStart.concat(':',xTimeSM,ind1,' to ', xTimeEnd,':',xTimeEM,ind2);
+    // }
+    // console.log(x.timeStart);
     xArray.push(x);
   });
+    // console.log(xArray);
   return xArray;
 };
 
@@ -130,7 +132,7 @@ function setMatchingLocked(student){
   for(let i = 0; i<allGroups.length; i++){
     if(allGroups[i][0] == student.group){
       var matchingLocked = allGroups[i][1];
-      console.log(allGroups[i]);
+      // console.log(allGroups[i]);
       break;
     }
   }
@@ -468,3 +470,37 @@ if(port == null || port == ""){
 app.listen(port, function() {
   console.log("Server started!");
 });
+
+
+// Email string generator test
+// var studentEmailList = [];
+
+// Student.find(function(err,students){
+//   if(err){
+//     console.log(err);
+//   } else {
+//     students.forEach(function(student){
+//       studentEmailList.push([student.email,""]);
+//     });
+
+//     Slot.find(function(err,slots){
+//       if (err){
+//         console.log(err);
+//       } else {
+//         for(i = 0; i<studentEmailList.length; i++){
+//           var thisStudentSlots = [];
+//           slots.forEach(function(slot){
+//             if(slot.studentEmail == studentEmailList[i][0]){
+//               thisStudentSlots.push(slot);
+//             }
+//           });
+//           studentEmailList[i][1] = thisStudentSlots;
+
+
+
+//         }
+//         // console.log(studentEmailList);
+//       }
+//     });
+//   }
+// });

@@ -19,7 +19,7 @@
       <div class="row">
         <div class="col col-lg-12">
           <%= slot.physName %>, <%=slot.physSpecialty %> <br />
-          <%= slot.dDate %>, <%= slot.dTime %> <br />
+          <%= slot.dDate %>, <%= slot.timeStart %> to <% slot.timeEnd %> <br />
           <%= slot.location %> <br />
           <% if(slot.notes){ %>
           <p class="italics">  Notes: <%= slot.notes %><br /></p>
@@ -43,7 +43,7 @@
     <div class="row">
       <div class="col col-lg-9">
         <%= slot.physName %>, <%=slot.physSpecialty %> <br />
-        <%= slot.dDate %>, <%= slot.dTime %> <br />
+        <%= slot.dDate %>, <%= slot.timeStart %> to <% slot.timeEnd %> <br />
         <%= slot.location %> <br />
         <% if(slot.notes){ %>
         <p class="italics">  Notes: <%= slot.notes %><br /></p>
@@ -104,7 +104,7 @@
         <%= slot.dDate %>
       </div>
       <div class="col col-12 col-lg-2">
-        <%= slot.dTime %>
+       <%= slot.timeStart %> to <%= slot.timeEnd %>
       </div>
       <div class="col col-12 col-lg-2">
         <%= slot.location %>
