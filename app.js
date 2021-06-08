@@ -140,6 +140,10 @@ function setMatchingLocked(student){
   return matchingLocked;
 }
 
+function errorPage(err){
+  res.render("error", {errM:err});
+}
+
 //GET
 app.get("/", function(req,res){
   res.render("landing");
@@ -153,6 +157,9 @@ app.get("/login", function(req,res){
 app.get("/activate-account", function(req,res){
   res.render("activate-account", {errM:"", errM2:""});
 });
+// app.get("/error", function(req,res){
+//   res.render("error", {err:"hi"});
+// });
 app.get('*', function(req, res) {
   res.redirect('/');
 });
@@ -188,6 +195,7 @@ app.post("/activate-account", function(req,res){
                     Slot.find(function(err,slots){
                       if(err){
                         console.log(err);
+                        errorPage(err);
                       } else {
                         console.log("SUCCESS");
                         const array = setDisplayValues(slots);
@@ -209,6 +217,7 @@ app.post("/activate-account", function(req,res){
     }
   })
 });
+
 app.post("/login", function(req,res){ //STUDENT LOGIN
   const email = _.toLower(req.body.email);
   const password = req.body.password;
@@ -229,6 +238,7 @@ app.post("/login", function(req,res){ //STUDENT LOGIN
               Slot.find(function(err,slots){
                 if(err){
                   console.log(err);
+                  errorPage(err);
                 } else {
                   // let matchingLocked = setMatchingLocked(foundUser);
                   const array = setDisplayValues(slots);
@@ -266,6 +276,7 @@ app.post("/admin-login", function(req,res){
               Slot.find(function(err,slots){
                 if(err){
                   console.log(err);
+                  errorPage(err);
                 } else {
                   updateGroups();
                   const array = setDisplayValues(slots);
@@ -294,15 +305,18 @@ app.post("/claim", function(req,res){
   Slot.findOne({_id:slotId}, function(err,thisSlot){
     if(err){
       console.log(err);
+      errorPage(err);
     } else {
       if (thisSlot.studentEmail){ // in case page isn't reloaded and someone else already claimed the slot
         Student.findOne({email:userEmail},function(err,foundUser){
           if(err){
             console.log(err);
+            errorPage(err);
           } else {
             Slot.find(function(err,slots){
               if(err){
                 console.log(err);
+                errorPage(err);
               } else {
                 const array = setDisplayValues(slots);
                 res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser),errM:"This slot was already claimed. Please reload the page frequently to see all available shadow slots."});
@@ -316,14 +330,17 @@ app.post("/claim", function(req,res){
         Slot.updateOne({_id:slotId},{studentName:userName, studentEmail:userEmail}, function(err){
           if(err){
             console.log(err);
+            errorPage(err);
           } else {
             Student.findOne({email:userEmail},function(err,foundUser){
               if(err){
                 console.log(err);
+                errorPage(err);
               } else {
                 Slot.find(function(err,slots){
                   if(err){
                     console.log(err);
+                    errorPage(err);
                   } else {
                     const array = setDisplayValues(slots);
                     res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser),errM:"Successfully matched."});
@@ -346,14 +363,17 @@ app.post("/unclaim", function(req,res){
   Slot.updateOne({_id:slotId},{studentName:null, studentEmail:null}, function(err){
     if(err){
       console.log(err);
+      errorPage(err);
     } else {
       Student.findOne({email:userEmail},function(err,foundUser){
         if(err){
           console.log(err);
+          errorPage(err);
         } else {
           Slot.find(function(err,slots){
             if(err){
               console.log(err);
+              errorPage(err);
             } else {
               const array = setDisplayValues(slots);
               res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser), errM:"Successfully removed slot."});
@@ -381,6 +401,7 @@ app.post("/admin-newAccounts", function(req,res){
       bcrypt.hash(password,saltRounds,function(err,hashedPassword){
         if(err){
           console.log(err);
+          errorPage(err);
         } else {
           const newStudent = new Student ({
             email:_.toLower(email),
@@ -390,6 +411,7 @@ app.post("/admin-newAccounts", function(req,res){
           newStudent.save(function(err){
             if(err){
               console.log(err);
+              errorPage(err);
             } else {
               console.log("Saved");
             }
@@ -416,6 +438,7 @@ app.post("/admin-newAccounts", function(req,res){
       bcrypt.hash(password,saltRounds,function(err,hashedPassword){
         if(err){
           console.log(err);
+          errorPage(err);
         } else {
           const newAdmin = new Admin ({
             fName:fName,
@@ -426,6 +449,7 @@ app.post("/admin-newAccounts", function(req,res){
           newAdmin.save(function(err){
             if(err){
               console.log(err);
+              errorPage(err);
             } else {
               console.log("Saved");
             }

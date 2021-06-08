@@ -19,7 +19,7 @@
       <div class="row">
         <div class="col col-lg-12">
           <%= slot.physName %>, <%=slot.physSpecialty %> <br />
-          <%= slot.dDate %>, <%= slot.timeStart %> to <% slot.timeEnd %> <br />
+          <%= slot.dDate %>, <%= slot.timeStart %> to <%= slot.timeEnd %> <br />
           <%= slot.location %> <br />
           <% if(slot.notes){ %>
           <p class="italics">  Notes: <%= slot.notes %><br /></p>
@@ -43,7 +43,7 @@
     <div class="row">
       <div class="col col-lg-9">
         <%= slot.physName %>, <%=slot.physSpecialty %> <br />
-        <%= slot.dDate %>, <%= slot.timeStart %> to <% slot.timeEnd %> <br />
+        <%= slot.dDate %>, <%= slot.timeStart %> to <%= slot.timeEnd %> <br />
         <%= slot.location %> <br />
         <% if(slot.notes){ %>
         <p class="italics">  Notes: <%= slot.notes %><br /></p>
@@ -62,7 +62,7 @@
 <% }) %>
 <hr /><br />
 <% if(count<maxSlots){ %>
-<h4>*You may add up to <%=(maxSlots-count)%> more match(es) at this time.</h4>
+<h4>*You may add up to <%=(maxSlots-count)%> more match(es) at this time. Your current matches are saved and Apollo will confirm your slots via email.</h4>
 <% } else {%>
 <h4>*You have the maximum number of matches at this time. Your matches are saved and Apollo will confirm your slots via email before June 28th.</h4>
 <% }%>
