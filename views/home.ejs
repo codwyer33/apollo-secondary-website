@@ -41,7 +41,7 @@
     <% count++; %>
     <hr />
     <div class="row">
-      <div class="col col-lg-9">
+      <div class="col-12 col-md-9">
         <%= slot.physName %>, <%=slot.physSpecialty %> <br />
         <%= slot.dDate %>, <%= slot.timeStart %> to <% slot.timeEnd %> <br />
         <%= slot.location %> <br />
@@ -49,10 +49,11 @@
         <p class="italics">  Notes: <%= slot.notes %><br /></p>
         <% }%>
       </div>
-      <div class="col col-lg-3">
+      <div class="col-12 col-md-3">
         <form action="/unclaim" method="post">
           <input type="hidden" name="userEmail" value="<%=user.email%>">
           <input type="hidden" name="slotId" value="<%=slot._id%>">
+          <br/>
           <button type="submit" name="button" class="btn">Remove</button>
         </form>
       </div>
@@ -73,7 +74,7 @@
 
 <h1>Shadow Slots</h1>
 <!-- <div class="container"> -->
-  <div class="row">
+  <div class="row chart-titles">
     <div class="col col-12 col-lg-2">
       Physician
     </div>

@@ -7,12 +7,7 @@
   padding-top:60px;
 /* background-image: url("https://www.transparenttextures.com/patterns/brushed-alum.png"); */
 }
-@media only screen and (max-width:700px){
-  #main{
-    padding:15px;
-    padding-top:40px;
-  }
-}
+
 
 .btn{
   background-color: lightgray;
@@ -149,3 +144,31 @@ body{
 .claimed-slot{
   padding-left:40px;
 }
+
+@media only screen and (max-width:991px){
+
+  .chart-titles {
+    display: none;
+  }
+
+}
+
+@media only screen and (max-width:700px){
+  #main{
+    padding:15px;
+    padding-top:40px;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  h1 {
+    font-size: 2em;
+    text-align: center;
+  }
+
+
+}
+
+
