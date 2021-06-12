@@ -56,7 +56,7 @@ const studentSchema = new mongoose.Schema({
 const Student = mongoose.model("Student", studentSchema);
 
 //INIT code
-var maxSlots = 4;
+var maxSlots = 100;
 var allGroups = [];
 // var allowedGroups =[];
 
