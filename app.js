@@ -109,7 +109,7 @@ function updateGroups(){
           }
         }
         if (duplicate == false){
-          allGroups.push([student.group, true]);
+          allGroups.push([student.group, false]);
         }
       });
 
