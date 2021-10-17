@@ -55,8 +55,45 @@ const studentSchema = new mongoose.Schema({
 });
 const Student = mongoose.model("Student", studentSchema);
 
+const logSchema = new mongoose.Schema({
+  time:String,
+  type:String,
+  user:String,
+  update:String,
+  slot: String
+});
+const Log = mongoose.model("Log", logSchema);
+
+function makeLog(type, user, update, slot){
+  var date = new Date();
+  if (slot != " "){
+    Slot.findOne({_id:slot}, function(err, foundSlot){
+      if (err){
+        console.log(err);
+      } else {
+        const newLog = new Log ({
+          time: (1+date.getMonth())+"/"+date.getDate()+" "+date.getHours()+":"+date.getMinutes()+":"+date.getSeconds(),
+          type: type,
+          user: user,
+          update: update, // activated email or slotid
+          slot: foundSlot.physName + " "+ foundSlot.timeStart+ " "+foundSlot.date
+        });
+        newLog.save(function(err){
+          if(err){
+            console.log(err);
+            errorPage(err);
+          } else {
+            console.log("Log saved");
+          }
+        });
+      }
+    });
+  }
+  
+}
+
 //INIT code
-var maxSlots = 100;
+var maxSlots = 1;
 var allGroups = [];
 // var allowedGroups =[];
 
@@ -137,6 +174,7 @@ function setMatchingLocked(student){
       break;
     }
   }
+  return true; //temporary: if true, matches are allowed. set to false after the session
   return matchingLocked;
 }
 
@@ -199,6 +237,7 @@ app.post("/activate-account", function(req,res){
                       } else {
                         console.log("SUCCESS");
                         const array = setDisplayValues(slots);
+                        makeLog("Activate account", email, email, " ");
 
                         res.render("home", {errM:"Account activated!",user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser)});
                       }
@@ -319,6 +358,7 @@ app.post("/claim", function(req,res){
                 errorPage(err);
               } else {
                 const array = setDisplayValues(slots);
+                makeLog("Claim: already claimed", userEmail, slotId, slotId);
                 res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser),errM:"This slot was already claimed. Please reload the page frequently to see all available shadow slots."});
               }
             });
@@ -343,6 +383,7 @@ app.post("/claim", function(req,res){
                     errorPage(err);
                   } else {
                     const array = setDisplayValues(slots);
+                    makeLog("Claim slot", userEmail, slotId, slotId);
                     res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser),errM:"Successfully matched."});
                   }
                 });
@@ -376,6 +417,7 @@ app.post("/unclaim", function(req,res){
               errorPage(err);
             } else {
               const array = setDisplayValues(slots);
+              makeLog("Unclaim", userEmail, slotId, slotId);
               res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser), errM:"Successfully removed slot."});
             }
           });
@@ -557,4 +599,126 @@ app.listen(port, function() {
 //       }
 //     });
 //   }
+// });
+
+// var confEmails = [];
+// Student.find(function(err,students){
+//   if(err){
+//     console.log(err);
+//   } else {
+//     allContent = ""
+//     Slot.find(function(err,slots){
+//       for(var i=0; i<students.length; i++){
+//         var thisStudentSlots = [];
+//         for (var j=0; j<slots.length; j++){
+//           if (slots[j].studentEmail == students[i].email){
+//             thisStudentSlots.push("SLOT: " + (slots[j].date.getMonth()+1) + "/" + slots[j].date.getDate() + " from " + slots[j].timeStart + " to " + slots[j].timeEnd + ", with " + slots[j].physName + " (" + slots[j].physSpecialty+"). Location: " + slots[j].location + ". Notes: " + slots[j].notes);
+//           }
+//         }
+//         var content = "";
+//         for(var k = 0; k<thisStudentSlots.length; k++){
+//           content = content + thisStudentSlots[k] + " ";
+//         }
+//         // console.log(content);
+//         if (content.length < 1){
+//           content = "None";
+//         }
+//         allContent = allContent + content + " ///";
+//         // console.log(students[i].email)
+//       }
+//       console.log(allContent)
+//     });
+//   }
+// });
+
+// var physList = ["Alex Bodenstab","Anjala Pahwa","Arlen Stone","Beenish Ahmed","Brian Galinat","Craig Smucker","Debbie Zarek","Drew Brady","Eric Johnson","Evan Lapinsky","Gaurav Jain","Gregg Goldstein","Gregory Masters","Harry Lebowitz","Jagdeep Hundal","James Rubano","Jayshree Tailor","Jean Stewart","Jennifer Turano","Jiao Junfang","Joan Coker","Jonathan Romak","Joseph Straight","Kieran Connolly","Kimberly Rogers","Matthew McCarter","Matt Handling","Michael Teixido","Michael Pushkarewicz","Nancy Fan","Neil Hockstein","Paul Imber","Pawan Rastogi","Prasad Kanchana","Pulak Ray","Rob Winter","Steve Dellose","Steve Rybicki","Stephen Kushner","William Newell","William Sheppard","W. Scott Newcomb, DPM","Ken Lingenfelter"];
+// // var sList = [["suveer.ganta@gmail.com", "Suveer Ganta"],["so.emily@charterschool.org", "Emily So "],["ths2263@towerhill.org", "Lauren Kulda "],["nidhipatel0943@gmail.com", "Nidhi Patel "],["daga.kirti@charterschool.org", "Kirti Daga"],["kaurjasleen2004@gmail.com", "Jasleen Kaur"],["samveda.menon@gmail.com", "Samveda Menon"],["preba0914@icloud.com", "Sariaya Oommen"],["abigail_mclaughlin@yahoo.com", "Abby McLaughlin"],["kyleelev01@gmail.com", "Kylee"],["pelane2004@gmail.com", "Paige Lane"],["eanewcomb16@gmail.com", "Emily Newcomb"],["emilyhaney0@gmail.com", "Emily Haney"],["ameetabalaji23@gmail.com", "Ameeta Balaji"],["anastasiarigas13@gmail.com", "Anastasia Rigas"],["mlrush2123@gmail.com", "Miranda Rush"],["sindhu.narayan20@gmail.com", "Sindhu Narayan"],["mstelyn@gmail.com", "Mackenzie Stelyn"],["ciannic31@gmail.com", "Cianni Covert"],["chizaramogbunamiri@gmail.com", "Chizaram Ogbunamiri "],["ths22117@towerhill.org", "Paige Zhang"],["adhya654@gmail.com", "Adhya Anilkumar "],["priyal.patel.199030@gmail.com", "Priyal Patel"],["lucybtaylor24@gmail.com", "Lucy Taylor"],["joseph_iacono@verizon.net", "Joseph Iacono"],["elana.agarwal@gmail.com", "Elana Agarwal"],["wes.mah03@gmail.com", "Wesley Mah"],["brahmbhatt.siya@gmail.com", "Siya Brahmbhatt "],["mkounga21@archmereacademy.com", "Maeva Kounga"],["aemsley7@gmail.com", "Abigail Emsley"],["boyapati.shriya@charterschool.org", "Shriya Boyapati "],["estherchung0922@gmail.com", "Esther Chung"],["samraiqbal1013@gmail.com", "Samra Iqbal"],["srijay.chenna@gmail.com", "Srijay Chenna"],["raikahlon1@gmail.com", "Amanrai (Rai) Kahlon"],["cornwallo21@sanfordschool.org", "Liv Cornwall "],["sombaytwail@gmail.com", "Samara Durgadin"],["arjankahlon@gmail.com", "Arjan Kahlon"],["codwyer23@archmereacademy.com", "Clare O'Dwyer"],["puiyee.de@gmail.com", "Puiyee Kong"],["kimraph22@ncs.charter.k12.de.us", "Raphael Kim"],["ciannic31@gmail.com", "Cianni Covert"]];
+
+// var sList = [["suveer.ganta@gmail.com", "Suveer Ganta"],["so.emily@charterschool.org", "Emily So "],["ths2263@towerhill.org", "Lauren Kulda "],
+// ["nidhipatel0943@gmail.com", "Nidhi Patel "],
+// ["daga.kirti@charterschool.org", "Kirti Daga"],
+// ["kaurjasleen2004@gmail.com", "Jasleen Kaur"],
+// ["samveda.menon@gmail.com", "Samveda Menon"],
+// ["preba0914@icloud.com", "Sariaya Oommen"],
+// ["abigail_mclaughlin@yahoo.com", "Abby McLaughlin"],
+// ["kyleelev01@gmail.com", "Kylee"],
+// ["pelane2004@gmail.com", "Paige Lane"],
+// ["eanewcomb16@gmail.com", "Emily Newcomb"],
+// ["emilyhaney0@gmail.com", "Emily Haney"],
+// ["ameetabalaji23@gmail.com", "Ameeta Balaji"],["anastasiarigas13@gmail.com", "Anastasia Rigas"],
+// ["mlrush2123@gmail.com", "Miranda Rush"],
+// ["sindhu.narayan20@gmail.com", "Sindhu Narayan"],
+// ["mstelyn@gmail.com", "Mackenzie Stelyn"],
+// ["ciannic31@gmail.com", "Cianni Covert"],
+// ["chizaramogbunamiri@gmail.com", "Chizaram Ogbunamiri "],
+// ["ths22117@towerhill.org", "Paige Zhang"],
+// ["adhya654@gmail.com", "Adhya Anilkumar "],
+// ["priyal.patel.199030@gmail.com", "Priyal Patel"],
+// ["lucybtaylor24@gmail.com", "Lucy Taylor"],
+// ["elana.agarwal@gmail.com", "Elana Agarwal"],
+// ["wes.mah03@gmail.com", "Wesley Mah"],
+// ["brahmbhatt.siya@gmail.com", "Siya Brahmbhatt "],
+// ["mkounga21@archmereacademy.com", "Maeva Kounga"],
+// ["aemsley7@gmail.com", "Abigail Emsley"],
+// ["boyapati.shriya@charterschool.org", "Shriya Boyapati "],
+// ["estherchung0922@gmail.com", "Esther Chung"],
+// ["samraiqbal1013@gmail.com", "Samra Iqbal"],
+// ["srijay.chenna@gmail.com", "Srijay Chenna"],
+// ["raikahlon1@gmail.com", "Amanrai (Rai) Kahlon"],
+// ["cornwallo21@sanfordschool.org", "Liv Cornwall "],
+// ["sombaytwail@gmail.com", "Samara Durgadin"],
+// ["arjankahlon@gmail.com", "Arjan Kahlon"],
+// ["codwyer23@archmereacademy.com", "Clare O'Dwyer"],
+// ["puiyee.de@gmail.com", "Puiyee Kong"],
+// ["kimraph22@ncs.charter.k12.de.us", "Raphael Kim"],
+// ["ciannic31@gmail.com", "Cianni Covert"]];
+
+// allContent = ""
+// Slot.find(function(err,slots){
+//   for(var i=0; i<physList.length; i++){
+//     var thisPhysSlots = [];
+//     for (var j=0; j<slots.length; j++){
+//       if (slots[j].physName == physList[i]){
+//         for (var k=0; k< sList.length; k++){
+//           if (sList[k][0] == slots[j].studentEmail){
+//             var thisName = sList[k][1]
+//             thisPhysSlots.push("SLOT: " + (slots[j].date.getMonth()+1) + "/" + slots[j].date.getDate() + " from " + slots[j].timeStart + " to " + slots[j].timeEnd + ", with Dr. " + slots[j].physName + " (" + slots[j].physSpecialty+"). Location: " + slots[j].location + ". Student Name: " + thisName);
+//             // console.log(thisName+ ",   " + slots[j].studentEmail);
+//           }
+//         }
+//       }
+//     }
+//     var content = "";
+//     for(var k = 0; k<thisPhysSlots.length; k++){
+//       content = content + thisPhysSlots[k] + " ";
+//     }
+//     // console.log(content);
+//     if (content.length < 1){
+//       content = "None";
+//     }
+//     allContent = allContent + content + " ///";
+//     // console.log(students[i].email)
+//   }
+//   console.log(allContent)
+// });
+
+// Slot.find(function(err,slots){
+//   if(err){
+//     console.log(err);
+//   } else {
+//     for(var i=0; i<slots.length-1; i++){
+//       console.log(slots[i].studentEmail + ",    " + slots[i].studentName)
+
+//       // if(slots[i].studentEmail != null){
+//       //   Student.find({email:slots[i].studentEmail},function(err, thisStudent){
+//       //     Slot.updateOne({_id: slots[i]._id},{studentName: thisStudent.fName + " " + thisStudent.lName},function(err){
+  
+//       //     });
+    
+//       //   });
+//       // }    
+    
+//   }
+  
+// }
 // });
