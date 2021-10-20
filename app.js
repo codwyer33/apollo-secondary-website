@@ -93,7 +93,7 @@ function makeLog(type, user, update, slot){
 }
 
 //INIT code
-var maxSlots = 1;
+var maxSlots = 3;
 var allGroups = [];
 // var allowedGroups =[];
 
@@ -721,4 +721,50 @@ app.listen(port, function() {
 //   }
   
 // }
+// });
+// Mon Nov 22 00:00:00 GMT-08:00 2021
+
+// app.post("/admin-newSlots", function(req,res){
+//   console.log("here");
+//   var slotString = req.body.uploadSlots;
+// // slotString = "Alex Bodenstab+++Orthopaedics/Joint Replacement+++Wed Nov 10 00:00:00 GMT-08:00 2021+++1:00 PM+++5:00 PM+++MAP1 Suite 238 4745 Ogletown Stanton Rd Newark DE 19713++++++43";
+
+//   const uploadSlotArray = slotString;
+//   let n = [];
+//   var uploadSlots = uploadSlotArray.split("###");
+//   for(let i=0; i<uploadSlots.length; i++){
+//     n.push(uploadSlots[i].split("+++"));
+//   }
+//   n.forEach(function(slot){
+//     const name = slot[0];
+//     const specialty = slot[1];
+//     const date = slot[2];
+//     const start = slot[3];
+//     const end = slot[4];
+//     const address = slot[5];
+//     const notes = slot[6];
+//     const id = slot[7];
+
+//     const newSlot = new Slot ({
+//       physName: name,
+//       date: date,
+//       timeStart: start,
+//       physSpecialty:specialty,
+//       timeEnd: end,
+//       location:address,
+//       notes:notes,
+//       testId:id
+//     });
+//     var dateobj = new Date(date)
+//     console.log(dateobj);
+//     newSlot.save(function(err){
+//       if(err){
+//         console.log(err);
+//         errorPage(err);
+//       } else {
+//         console.log("Saved slot " + id);
+//       }
+//     });
+      
+//   });
 // });
