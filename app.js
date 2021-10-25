@@ -174,7 +174,7 @@ function setMatchingLocked(student){
       break;
     }
   }
-  return true; //temporary: if true, matches are allowed. set to false after the session
+  return false; //temporary: if true, matches are allowed. set to false after the session
   return matchingLocked;
 }
 
@@ -334,99 +334,99 @@ app.post("/admin-login", function(req,res){
   });
 });
 
-app.post("/claim", function(req,res){
-  const userFName = req.body.userFName;
-  const userLName = req.body.userLName;
-  const userName = userFName.concat(" ",userLName);
-  const userEmail = _.toLower(req.body.userEmail);
-  const slotId = req.body.slotId;
+// app.post("/claim", function(req,res){
+//   const userFName = req.body.userFName;
+//   const userLName = req.body.userLName;
+//   const userName = userFName.concat(" ",userLName);
+//   const userEmail = _.toLower(req.body.userEmail);
+//   const slotId = req.body.slotId;
 
-  Slot.findOne({_id:slotId}, function(err,thisSlot){
-    if(err){
-      console.log(err);
-      errorPage(err);
-    } else {
-      if (thisSlot.studentEmail){ // in case page isn't reloaded and someone else already claimed the slot
-        Student.findOne({email:userEmail},function(err,foundUser){
-          if(err){
-            console.log(err);
-            errorPage(err);
-          } else {
-            Slot.find(function(err,slots){
-              if(err){
-                console.log(err);
-                errorPage(err);
-              } else {
-                const array = setDisplayValues(slots);
-                makeLog("Claim: already claimed", userEmail, slotId, slotId);
-                res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser),errM:"This slot was already claimed. Please reload the page frequently to see all available shadow slots."});
-              }
-            });
-          }
-        });
+//   Slot.findOne({_id:slotId}, function(err,thisSlot){
+//     if(err){
+//       console.log(err);
+//       errorPage(err);
+//     } else {
+//       if (thisSlot.studentEmail){ // in case page isn't reloaded and someone else already claimed the slot
+//         Student.findOne({email:userEmail},function(err,foundUser){
+//           if(err){
+//             console.log(err);
+//             errorPage(err);
+//           } else {
+//             Slot.find(function(err,slots){
+//               if(err){
+//                 console.log(err);
+//                 errorPage(err);
+//               } else {
+//                 const array = setDisplayValues(slots);
+//                 makeLog("Claim: already claimed", userEmail, slotId, slotId);
+//                 res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser),errM:"This slot was already claimed. Please reload the page frequently to see all available shadow slots."});
+//               }
+//             });
+//           }
+//         });
 
-      } else { //slot was not already claimed
+//       } else { //slot was not already claimed
 
-        Slot.updateOne({_id:slotId},{studentName:userName, studentEmail:userEmail}, function(err){
-          if(err){
-            console.log(err);
-            errorPage(err);
-          } else {
-            Student.findOne({email:userEmail},function(err,foundUser){
-              if(err){
-                console.log(err);
-                errorPage(err);
-              } else {
-                Slot.find(function(err,slots){
-                  if(err){
-                    console.log(err);
-                    errorPage(err);
-                  } else {
-                    const array = setDisplayValues(slots);
-                    makeLog("Claim slot", userEmail, slotId, slotId);
-                    res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser),errM:"Successfully matched."});
-                  }
-                });
-              }
-            });
-          }
-        });
-      }
-    }
-  });
+//         Slot.updateOne({_id:slotId},{studentName:userName, studentEmail:userEmail}, function(err){
+//           if(err){
+//             console.log(err);
+//             errorPage(err);
+//           } else {
+//             Student.findOne({email:userEmail},function(err,foundUser){
+//               if(err){
+//                 console.log(err);
+//                 errorPage(err);
+//               } else {
+//                 Slot.find(function(err,slots){
+//                   if(err){
+//                     console.log(err);
+//                     errorPage(err);
+//                   } else {
+//                     const array = setDisplayValues(slots);
+//                     makeLog("Claim slot", userEmail, slotId, slotId);
+//                     res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser),errM:"Successfully matched."});
+//                   }
+//                 });
+//               }
+//             });
+//           }
+//         });
+//       }
+//     }
+//   });
 
-});
+// });
 
-app.post("/unclaim", function(req,res){
-  const slotId = req.body.slotId;
-  const userEmail = _.toLower(req.body.userEmail);
+// app.post("/unclaim", function(req,res){
+//   const slotId = req.body.slotId;
+//   const userEmail = _.toLower(req.body.userEmail);
 
-  Slot.updateOne({_id:slotId},{studentName:null, studentEmail:null}, function(err){
-    if(err){
-      console.log(err);
-      errorPage(err);
-    } else {
-      Student.findOne({email:userEmail},function(err,foundUser){
-        if(err){
-          console.log(err);
-          errorPage(err);
-        } else {
-          Slot.find(function(err,slots){
-            if(err){
-              console.log(err);
-              errorPage(err);
-            } else {
-              const array = setDisplayValues(slots);
-              makeLog("Unclaim", userEmail, slotId, slotId);
-              res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser), errM:"Successfully removed slot."});
-            }
-          });
-        }
-      });
-    }
-  });
+//   Slot.updateOne({_id:slotId},{studentName:null, studentEmail:null}, function(err){
+//     if(err){
+//       console.log(err);
+//       errorPage(err);
+//     } else {
+//       Student.findOne({email:userEmail},function(err,foundUser){
+//         if(err){
+//           console.log(err);
+//           errorPage(err);
+//         } else {
+//           Slot.find(function(err,slots){
+//             if(err){
+//               console.log(err);
+//               errorPage(err);
+//             } else {
+//               const array = setDisplayValues(slots);
+//               makeLog("Unclaim", userEmail, slotId, slotId);
+//               res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser), errM:"Successfully removed slot."});
+//             }
+//           });
+//         }
+//       });
+//     }
+//   });
 
-});
+// });
 app.post("/admin-newAccounts", function(req,res){
   const uploadUserArray = req.body.uploadUsers;
   let n = [];
