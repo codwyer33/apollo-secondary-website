@@ -630,11 +630,13 @@ app.listen(port, function() {
 //     });
 //   }
 // });
-
+var physList = ["Bijan Sorouri","Dan Elliott","Debbie Zarek","Ijaz Anwar","Jayshree Tailor","Jeff Cramer","Nancy Fan","Nimesh Mehta","Priya Dixit-Patel","Sangita Modi","Sharad Patel","Shilpa Mehta","Stephen Kushner","Vishal Patel","Alex Bodenstab","Arun Malhotra","Ashesh Modi","Brad Bley","Brian Sarter","Craig Smucker","Damian Andrisani","Drew Brady","Gaetano Pastore","Ganesh Balu","Gregg Goldstein","Gregory Masters","Jagdeep Hundal","James Rubano","Jean Stewart","Jennifer Turano","Jeremie Axe","Joan Coker","John Kelly","Jonathan Romak","Joseph Straight","Ken Lingenfelter","Kieran Connolly","Michael Teixido","Neil Hockstein","Paul Imber","Pawan Rastogi","Prasad Kanchana","Prayus Tailor","Pulak Ray","Randeep Kahlon","Scott Roberts","Tom Barnett","W. Scott Newcomb, DPM","William Sheppard"];
 // var physList = ["Alex Bodenstab","Anjala Pahwa","Arlen Stone","Beenish Ahmed","Brian Galinat","Craig Smucker","Debbie Zarek","Drew Brady","Eric Johnson","Evan Lapinsky","Gaurav Jain","Gregg Goldstein","Gregory Masters","Harry Lebowitz","Jagdeep Hundal","James Rubano","Jayshree Tailor","Jean Stewart","Jennifer Turano","Jiao Junfang","Joan Coker","Jonathan Romak","Joseph Straight","Kieran Connolly","Kimberly Rogers","Matthew McCarter","Matt Handling","Michael Teixido","Michael Pushkarewicz","Nancy Fan","Neil Hockstein","Paul Imber","Pawan Rastogi","Prasad Kanchana","Pulak Ray","Rob Winter","Steve Dellose","Steve Rybicki","Stephen Kushner","William Newell","William Sheppard","W. Scott Newcomb, DPM","Ken Lingenfelter"];
-// // var sList = [["suveer.ganta@gmail.com", "Suveer Ganta"],["so.emily@charterschool.org", "Emily So "],["ths2263@towerhill.org", "Lauren Kulda "],["nidhipatel0943@gmail.com", "Nidhi Patel "],["daga.kirti@charterschool.org", "Kirti Daga"],["kaurjasleen2004@gmail.com", "Jasleen Kaur"],["samveda.menon@gmail.com", "Samveda Menon"],["preba0914@icloud.com", "Sariaya Oommen"],["abigail_mclaughlin@yahoo.com", "Abby McLaughlin"],["kyleelev01@gmail.com", "Kylee"],["pelane2004@gmail.com", "Paige Lane"],["eanewcomb16@gmail.com", "Emily Newcomb"],["emilyhaney0@gmail.com", "Emily Haney"],["ameetabalaji23@gmail.com", "Ameeta Balaji"],["anastasiarigas13@gmail.com", "Anastasia Rigas"],["mlrush2123@gmail.com", "Miranda Rush"],["sindhu.narayan20@gmail.com", "Sindhu Narayan"],["mstelyn@gmail.com", "Mackenzie Stelyn"],["ciannic31@gmail.com", "Cianni Covert"],["chizaramogbunamiri@gmail.com", "Chizaram Ogbunamiri "],["ths22117@towerhill.org", "Paige Zhang"],["adhya654@gmail.com", "Adhya Anilkumar "],["priyal.patel.199030@gmail.com", "Priyal Patel"],["lucybtaylor24@gmail.com", "Lucy Taylor"],["joseph_iacono@verizon.net", "Joseph Iacono"],["elana.agarwal@gmail.com", "Elana Agarwal"],["wes.mah03@gmail.com", "Wesley Mah"],["brahmbhatt.siya@gmail.com", "Siya Brahmbhatt "],["mkounga21@archmereacademy.com", "Maeva Kounga"],["aemsley7@gmail.com", "Abigail Emsley"],["boyapati.shriya@charterschool.org", "Shriya Boyapati "],["estherchung0922@gmail.com", "Esther Chung"],["samraiqbal1013@gmail.com", "Samra Iqbal"],["srijay.chenna@gmail.com", "Srijay Chenna"],["raikahlon1@gmail.com", "Amanrai (Rai) Kahlon"],["cornwallo21@sanfordschool.org", "Liv Cornwall "],["sombaytwail@gmail.com", "Samara Durgadin"],["arjankahlon@gmail.com", "Arjan Kahlon"],["codwyer23@archmereacademy.com", "Clare O'Dwyer"],["puiyee.de@gmail.com", "Puiyee Kong"],["kimraph22@ncs.charter.k12.de.us", "Raphael Kim"],["ciannic31@gmail.com", "Cianni Covert"]];
-
-// var sList = [["suveer.ganta@gmail.com", "Suveer Ganta"],["so.emily@charterschool.org", "Emily So "],["ths2263@towerhill.org", "Lauren Kulda "],
+// var sList = [["arjankahlon@gmail.com", "Arjan Kahlon"],["anastasiarigas13@gmail.com", "Anastasia Rigas"],["ciannic31@gmail.com", "Cianni Covert"],["so.emily@charterschool.org", "Emily So"],["estherchung0922@gmail.com", "Esther Chung"],["kaurjasleen2004@gmail.com", "Jasleen Kaur"],["ths2263@towerhill.org", "Lauren Kulda"],["pelane2004@gmail.com", "Paige Lane"],["samveda.menon@gmail.com", "Samveda Menon"],["preba0914@icloud.com", "Sariaya Oommen"],["abcholewa1@gmail.com", "Abigail Cholewa"],["adeebaallim@gmail.com", "Adeeba Allimulla"],["guninadrika@gmail.com", "Adrika Gunin"],["raikahlon1@gmail.com", "Amanrai Kahlon"],["amdrushler@gmail.com", "Amelia Drushler"],["acmorlet@gmail.com", "Anais Morlet"]];
+// var sList = [["apezzuto@ursuline.org", "Angelina Pezzuto"],["anshdesai46@gmail.com", "Ansh Desai"],["griffbrooke11@gmail.com", "Brooke Griffin"],["ths2360@towerhill.org", "Cameron Haskins"],["cecifant23@ncs.charter.k12.de.us", "Cecilia Fantini"],["celinelourde@hotmail.com", "Celine Lourdemaria"],["charlotte90210@outlook.com", "Charlotte Walder"],["dheedant23@ncs.charter.k12.de.us", "Dheeraj Danthuluri"],["dudhiadiya4@gmail.com", "Diya Dudhia"]];
+// var sList = [["annasagaram.meghnaraj@charterschool.org", "Meghna Annasagaram"],["pgedelman@gmail.com", "Paul Edelman"],["puiyee.de@gmail.com", "Puiyee Kong"],["sahasubb23@ncs.charter.k12.de.us", "Saharsh Subbasani"],["chittakone.021@gmail.com", "Samantha Chittakone"],["samraiqbal1013@gmail.com", "Samra Iqbal"],["sindsiva23@ncs.charter.k12.de.us", "Sindhu Sivasankar"],["srijay.chenna@gmail.com", "Srijay Chenna"],["suhabhat23@ncs.charter.k12.de.us", "Suhani Bhatt"],["kedda.tara@charterschool.org", "Tara Kedda"],["vadhera.varun@charterschool.org", "Varun Vadhera"],["wynnkama23@ncs.charter.k12.de.us", "Wynnie Kamau"]];
+// var sList = [["sawdeye23@sanfordschool.org", "Eva Sawdey"],["cokerh23@sanfordschool.org", "Helena Coker"],["mancuso.jack@charterschool.org", "Jack Mancuso"],["jasminelee03@gmail.com", "Jasmine Lee"],["johanjc04@gmail.com", "Johan Cheruvannoor"],["kimorahbrisco@gmail.com", "Kimorah Brisco"],["madsrieger@icloud.com", "Madison Rieger"],["s.matthew.haimowitz@redclayschools.com", "Matthew Haimowitz"]];
+var sList = [["suveer.ganta@gmail.com", "Suveer Ganta"],["so.emily@charterschool.org", "Emily So "],["ths2263@towerhill.org", "Lauren Kulda "]];
 // ["nidhipatel0943@gmail.com", "Nidhi Patel "],
 // ["daga.kirti@charterschool.org", "Kirti Daga"],
 // ["kaurjasleen2004@gmail.com", "Jasleen Kaur"],
@@ -673,34 +675,34 @@ app.listen(port, function() {
 // ["kimraph22@ncs.charter.k12.de.us", "Raphael Kim"],
 // ["ciannic31@gmail.com", "Cianni Covert"]];
 
-// allContent = ""
-// Slot.find(function(err,slots){
-//   for(var i=0; i<physList.length; i++){
-//     var thisPhysSlots = [];
-//     for (var j=0; j<slots.length; j++){
-//       if (slots[j].physName == physList[i]){
-//         for (var k=0; k< sList.length; k++){
-//           if (sList[k][0] == slots[j].studentEmail){
-//             var thisName = sList[k][1]
-//             thisPhysSlots.push("SLOT: " + (slots[j].date.getMonth()+1) + "/" + slots[j].date.getDate() + " from " + slots[j].timeStart + " to " + slots[j].timeEnd + ", with Dr. " + slots[j].physName + " (" + slots[j].physSpecialty+"). Location: " + slots[j].location + ". Student Name: " + thisName);
-//             // console.log(thisName+ ",   " + slots[j].studentEmail);
-//           }
-//         }
-//       }
-//     }
-//     var content = "";
-//     for(var k = 0; k<thisPhysSlots.length; k++){
-//       content = content + thisPhysSlots[k] + " ";
-//     }
-//     // console.log(content);
-//     if (content.length < 1){
-//       content = "None";
-//     }
-//     allContent = allContent + content + " ///";
-//     // console.log(students[i].email)
-//   }
-//   console.log(allContent)
-// });
+allContent = ""
+Slot.find(function(err,slots){
+  for(var i=0; i<physList.length; i++){
+    var thisPhysSlots = [];
+    for (var j=0; j<slots.length; j++){
+      if (slots[j].physName == physList[i]){
+        for (var k=0; k< sList.length; k++){
+          if (sList[k][0] == slots[j].studentEmail){
+            var thisName = sList[k][1]
+            thisPhysSlots.push("SLOT: " + (slots[j].date.getMonth()+1) + "/" + slots[j].date.getDate() + " from " + slots[j].timeStart + " to " + slots[j].timeEnd + ", with Dr. " + slots[j].physName + " (" + slots[j].physSpecialty+"). Location: " + slots[j].location + ". Student Name: " + thisName);
+            // console.log(thisName+ ",   " + slots[j].studentEmail);
+          }
+        }
+      }
+    }
+    var content = "";
+    for(var k = 0; k<thisPhysSlots.length; k++){
+      content = content + thisPhysSlots[k] + " ";
+    }
+    // console.log(content);
+    if (content.length < 1){
+      content = "None";
+    }
+    allContent = allContent + content + " ///";
+    // console.log(students[i].email)
+  }
+  console.log(allContent)
+});
 
 // Slot.find(function(err,slots){
 //   if(err){
@@ -722,6 +724,7 @@ app.listen(port, function() {
   
 // }
 // });
+
 // Mon Nov 22 00:00:00 GMT-08:00 2021
 
 // app.post("/admin-newSlots", function(req,res){
