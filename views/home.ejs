@@ -122,7 +122,9 @@
         <% count >= maxSlots ? btnProp = "disabled" : null %>
 
         <% if (slot.studentEmail) { %>
+          <% if (slot.studentEmail.length>0) { %>
           <p class="italics">Filled</p>
+          <% } %>
         <% } else { %>
             <form class="" action="/claim" method="post">
               <input type="hidden" name="userFName" value="<%=user.fName%>">
