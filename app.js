@@ -174,7 +174,7 @@ function setMatchingLocked(student){
       break;
     }
   }
-  return true; //temporary: if true, matches are allowed. set to false after the session
+  return false; //temporary: if true, matches are allowed. set to false after the session
   return matchingLocked;
 }
 
