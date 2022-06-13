@@ -93,7 +93,7 @@ function makeLog(type, user, update, slot){
 }
 
 //INIT code
-var maxSlots = 200;
+var maxSlots = 3;
 var allGroups = [];
 // var allowedGroups =[];
 
@@ -174,7 +174,7 @@ function setMatchingLocked(student){
       break;
     }
   }
-  return false; //temporary: if true, matches are allowed. set to false after the session
+  return true; //temporary: if true, matches are allowed. set to false after the session
   return matchingLocked;
 }
 
