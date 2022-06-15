@@ -93,7 +93,7 @@ function makeLog(type, user, update, slot){
 }
 
 //INIT code
-var maxSlots = 3;
+var maxSlots = 5;
 var allGroups = [];
 // var allowedGroups =[];
 
