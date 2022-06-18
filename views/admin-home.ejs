@@ -47,6 +47,21 @@
   <button type="submit" name="button" class="btn">Get String</button>
 </form>
 <br /><hr><br />
+<h4>Confirm Status</h4><br /> 
+<!-- future todo: make only students who have 1+ slot show up -->
+<% confirms.forEach(function(confirm){ %>
+
+<div class="row">
+  <div class="col col-6">
+    <%= confirm.email %>
+  </div>
+  <div class= "col col-6">
+    <%= confirm.confirmed %>
+  </div>
+</div>
+<% }); %>
+
+<br /><hr><br />
 
 <h1 id="shadow-slots-head">Shadow Slots</h1>
 <!-- <div class="container"> -->

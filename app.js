@@ -55,6 +55,39 @@ const studentSchema = new mongoose.Schema({
 });
 const Student = mongoose.model("Student", studentSchema);
 
+const confirmSchema = new mongoose.Schema({
+  email: String,
+  confirmed: Boolean
+})
+const Confirm = mongoose.model("Confirm", confirmSchema);
+
+//temp, integrate with upload student accounts
+function initConfirm(){
+  Student.find(function(err, students){
+    if(err){
+      console.log(err);
+    } else {
+      students.forEach(function(thisStudent){
+        const newConfirm = new Confirm ({
+          email: thisStudent.email,
+          confirm: false
+        });
+        newConfirm.save(function(err){
+          if(err){
+            console.log(err);
+            errorPage(err);
+          } else {
+            console.log("Confirm saved for "+thisStudent.email);
+          }
+        });
+        
+      });
+    }
+
+  });
+}
+// initConfirm();
+
 const logSchema = new mongoose.Schema({
   time:String,
   type:String,
@@ -319,7 +352,14 @@ app.post("/admin-login", function(req,res){
                 } else {
                   updateGroups();
                   const array = setDisplayValues(slots);
-                  res.render("admin-home", {slots:array, maxSlots:maxSlots, allGroups:allGroups.sort()});
+                  Confirm.find(function(err,confirms){
+                    if(err){
+                      console.log(err);
+                      errorPage(err);
+                    } else {
+                    res.render("admin-home", {slots:array, maxSlots:maxSlots, allGroups:allGroups.sort(), confirms:confirms});
+                    }
+                  });
                 }
               });
             } else {
@@ -425,8 +465,36 @@ app.post("/unclaim", function(req,res){
       });
     }
   });
-
 });
+
+app.post("/confirm", function(req,res){
+  const userEmail = _.toLower(req.body.userEmail);
+  Confirm.updateOne({email:userEmail},{confirmed:true}, function(err){
+    if(err){
+      console.log(err);
+      errorPage(err);
+    } else {
+      Student.findOne({email:userEmail},function(err,foundUser){
+        if(err){
+          console.log(err);
+          errorPage(err);
+        } else {
+          Slot.find(function(err,slots){
+            if(err){
+              console.log(err);
+              errorPage(err);
+            } else {
+              const array = setDisplayValues(slots);
+              // makeLog("Confirm", userEmail, slotId, slotId);
+              res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser), errM:"Successfully confirmed your slots."});
+            }
+          });
+        }
+      });
+    }
+  });
+});
+
 app.post("/admin-newAccounts", function(req,res){
   const uploadUserArray = req.body.uploadUsers;
   let n = [];
