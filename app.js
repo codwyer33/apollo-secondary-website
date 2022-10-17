@@ -51,7 +51,8 @@ const studentSchema = new mongoose.Schema({
   password:String,
   email:String,
   appId:String,
-  group:String
+  group:String,
+  matchingLocked: Boolean,
 });
 const Student = mongoose.model("Student", studentSchema);
 
@@ -60,6 +61,36 @@ const confirmSchema = new mongoose.Schema({
   confirmed: Boolean
 })
 const Confirm = mongoose.model("Confirm", confirmSchema);
+
+const controlSchema = new mongoose.Schema({
+  maxSlots: Number,
+  PCPonly: Boolean,
+  id: Number, //future: add groups allowed
+})
+const Control = mongoose.model("Control", controlSchema);
+
+const thisControl = new Control({maxSlots:1, PCPonly: true, id:1});
+
+// thisControl.save(function(err){
+//   if(!err){
+//     console.log("Saved control")
+//   }});
+
+// Student.updateMany({}, {matchingLocked:true}, function(err, students){
+//   if(err){
+//     console.log(err);
+//   } else { 
+//     console.log("all students locked");
+//   }
+// });
+
+// Student.updateMany({group:"2022-2024 "}, {matchingLocked:false}, function(err, students){
+//   if(err){
+//     console.log(err);
+//   } else { 
+//     console.log("all students locked");
+//   }
+// });
 
 //temp, integrate with upload student accounts
 function initConfirm(){
@@ -126,7 +157,7 @@ function makeLog(type, user, update, slot){
 }
 
 //INIT code
-var maxSlots = 5;
+var maxSlots = 1;
 var allGroups = [];
 // var allowedGroups =[];
 
@@ -199,16 +230,29 @@ function updateGroups(){
   });
 }
 
-function setMatchingLocked(student){
-  for(let i = 0; i<allGroups.length; i++){
-    if(allGroups[i][0] == student.group){
-      var matchingLocked = allGroups[i][1];
-      // console.log(allGroups[i]);
-      break;
-    }
-  }
-  return false; //temporary: if true, matches are allowed. set to false after the session
-  return matchingLocked;
+// function setMatchingLocked(student){
+//   for(let i = 0; i<allGroups.length; i++){
+//     if(allGroups[i][0] == student.group){
+//       var matchingLocked = allGroups[i][1];
+//       // console.log(allGroups[i]);
+//       break;
+//     }
+//   }
+//   return false; //temporary: if true, matches are allowed. set to false after the session
+//   return matchingLocked;
+// }
+function checkPCP(array){
+  // array.forEach(function(thisSlot){
+  //   console.log(thisSlot);
+  // })
+  console.log("checking")
+  // console.log(array);
+}
+function getControl(){
+  console.log("getControl function")
+  Control.findOne({id:1}, function(err, foundControl){
+    return foundControl;
+  });
 }
 
 function errorPage(err){
@@ -272,7 +316,7 @@ app.post("/activate-account", function(req,res){
                         const array = setDisplayValues(slots);
                         makeLog("Activate account", email, email, " ");
 
-                        res.render("home", {errM:"Account activated!",user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser)});
+                        res.render("home", {errM:"Account activated!",user:foundUser, slots:array, maxSlots:maxSlots, controls:getControl()});
                       }
                     });
                   }
@@ -314,8 +358,9 @@ app.post("/login", function(req,res){ //STUDENT LOGIN
                 } else {
                   // let matchingLocked = setMatchingLocked(foundUser);
                   const array = setDisplayValues(slots);
-
-                  res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser), errM:""});
+                  Control.findOne({id:1}, function(err, controls){
+                    res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, errM:"", controls:controls});
+                  });
                 }
               });
             } else {
@@ -400,7 +445,7 @@ app.post("/claim", function(req,res){
                 } else {
                   const array = setDisplayValues(slots);
                   makeLog("Claim: already claimed", userEmail, slotId, slotId);
-                  res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser),errM:"This slot was already claimed. Please reload the page frequently to see all available shadow slots."});
+                  res.render("home", {user:foundUser, slots:array, controls:getControl(), maxSlots:maxSlots, errM:"This slot was already claimed. Please reload the page frequently to see all available shadow slots."});
                 }
               });
             }
@@ -424,7 +469,7 @@ app.post("/claim", function(req,res){
                   } else {
                     const array = setDisplayValues(slots);
                     makeLog("Claim slot", userEmail, slotId, slotId);
-                    res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser),errM:"Successfully matched."});
+                    res.render("home", {user:foundUser, slots:array, controls:getControl(), maxSlots:maxSlots, errM:"Successfully matched."});
                   }
                 });
               }
@@ -458,7 +503,7 @@ app.post("/unclaim", function(req,res){
             } else {
               const array = setDisplayValues(slots);
               makeLog("Unclaim", userEmail, slotId, slotId);
-              res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser), errM:"Successfully removed slot."});
+              res.render("home", {user:foundUser, slots:array, controls:getControl(), maxSlots:maxSlots, errM:"Successfully removed slot."});
             }
           });
         }
@@ -486,7 +531,7 @@ app.post("/confirm", function(req,res){
             } else {
               const array = setDisplayValues(slots);
               // makeLog("Confirm", userEmail, slotId, slotId);
-              res.render("home", {user:foundUser, slots:array, maxSlots:maxSlots, matchingLocked:setMatchingLocked(foundUser), errM:"Successfully confirmed your slots."});
+              res.render("home", {user:foundUser, slots:array, controls:getControl(), maxSlots:maxSlots, errM:"Successfully confirmed your slots."});
             }
           });
         }
@@ -513,10 +558,12 @@ app.post("/admin-newAccounts", function(req,res){
           console.log(err);
           errorPage(err);
         } else {
+          console.log("new student");
           const newStudent = new Student ({
             email:_.toLower(email),
             password:hashedPassword,
-            group:group
+            group:group,
+            // matchingLocked: false,
           });
           newStudent.save(function(err){
             if(err){
