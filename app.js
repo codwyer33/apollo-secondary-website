@@ -76,11 +76,11 @@ const thisControl = new Control({maxSlots:1, PCPonly: true, id:1});
 //     console.log("Saved control")
 //   }});
 
-// Student.updateMany({}, {matchingLocked:true}, function(err, students){
+// Student.updateMany({}, {matchingLocked:false}, function(err, students){
 //   if(err){
 //     console.log(err);
 //   } else { 
-//     console.log("all students locked");
+//     console.log("all students unlocked");
 //   }
 // });
 
@@ -157,7 +157,7 @@ function makeLog(type, user, update, slot){
 }
 
 //INIT code
-var maxSlots = 1;
+var maxSlots = 2;
 var allGroups = [];
 // var allowedGroups =[];
 
