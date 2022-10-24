@@ -76,11 +76,11 @@ const thisControl = new Control({maxSlots:1, PCPonly: true, id:1});
 //     console.log("Saved control")
 //   }});
 
-// Student.updateMany({}, {matchingLocked:false}, function(err, students){
+// Student.updateMany({}, {matchingLocked:true}, function(err, students){
 //   if(err){
 //     console.log(err);
 //   } else { 
-//     console.log("all students unlocked");
+//     console.log("all students (un)locked");
 //   }
 // });
 
