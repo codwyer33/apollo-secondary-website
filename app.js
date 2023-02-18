@@ -76,7 +76,8 @@ const thisControl = new Control({maxSlots:1, PCPonly: true, id:1});
 //     console.log("Saved control")
 //   }});
 
-// Student.updateMany({}, {matchingLocked:false}, function(err, students){
+// toggle match access
+// Student.updateMany({}, {matchingLocked:true}, function(err, students){
 //   if(err){
 //     console.log(err);
 //   } else { 
